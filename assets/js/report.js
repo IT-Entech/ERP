@@ -4,7 +4,7 @@ function fetchYear() {
 const channel = document.getElementById('channel').value;
 const Sales = document.getElementById('Sales').value;
 const is_new = document.getElementById('is_new').value;
-  let url = `reportchart.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
+  let url = `/ERP/reportchart.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
 
   fetch(url)
     .then(response => {

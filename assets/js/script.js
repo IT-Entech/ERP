@@ -6,7 +6,7 @@ const Sales = document.getElementById('Sales').value;
 const is_new = document.getElementById('is_new').value;
 let url;
 
-  url = `revenue.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
+  url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
   
 
 fetch(url)
@@ -205,7 +205,7 @@ percentageElement.textContent = percentage.toLocaleString('en-US', {
     document.addEventListener('DOMContentLoaded', fetchYear);
 
     document.addEventListener('DOMContentLoaded', (event) => {
-      fetch('staff_id.php')
+      fetch('/ERP/staff_id.php')
           .then(response => {
               if (!response.ok) {
                   throw new Error(`HTTP error! Status: ${response.status}`);

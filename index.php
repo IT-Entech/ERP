@@ -4,7 +4,7 @@ $name = htmlspecialchars($name);
 $staff = htmlspecialchars($staff);
 $level = htmlspecialchars($level);
 $Role = htmlspecialchars($role);
-if($staff === 0 || $level <= 1){
+if($staff === 0 || $level == 0){
   echo '<script>alert("Can not enter this site");window.location="./pages-login.html";</script>';
 }
 ?>
@@ -322,9 +322,9 @@ h2 {
           <i class="bi bi-grid"></i>
           <span>Dashboard</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="dashboards-nav" class="nav-content show" data-bs-parent="#sidebar-nav">
+        <ul id="dashboards-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="./CRM" class="active">
+            <a href="./CRM">
               <i class="bi bi-circle"></i><span>CRM</span>
             </a>
           </li>
@@ -519,14 +519,14 @@ h2 {
           <span>Profile</span>
         </a>
       </li-->
-
+      <?php if ($level > 2): ?>
       <li class="nav-item">
         <a class="nav-link collapsed" href="permission.php">
           <i class="bi bi-question-circle"></i>
           <span>Permission</span>
         </a>
       </li>
-
+      <?php endif; ?>
       <!--li class="nav-item">
         <a class="nav-link collapsed" href="pages-contact.html">
           <i class="bi bi-envelope"></i>
