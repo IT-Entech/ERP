@@ -290,12 +290,12 @@ if($staff === 0 || $level == 0){
         </a>
         <ul id="dashboards-nav" class="nav-content show" data-bs-parent="#sidebar-nav">
         <li>
-            <a href="index.php" class="active">
+            <a href="../CRM" class="active">
               <i class="bi bi-circle"></i><span>CRM</span>
             </a>
           </li>
           <li>
-            <a href="index-Maintanance.php">
+            <a href="../MA">
               <i class="bi bi-circle"></i><span>Maintanance</span>
             </a>
           </li>
@@ -485,14 +485,14 @@ if($staff === 0 || $level == 0){
           <span>Profile</span>
         </a>
       </li-->
-
+      <?php if ($level > 2): ?>
       <li class="nav-item">
         <a class="nav-link collapsed" href="permission.php">
           <i class="bi bi-question-circle"></i>
           <span>Permission</span>
         </a>
       </li>
-
+      <?php endif; ?>
       <!--li class="nav-item">
         <a class="nav-link collapsed" href="pages-contact.html">
           <i class="bi bi-envelope"></i>
@@ -543,8 +543,11 @@ if($staff === 0 || $level == 0){
         </ol>
         
       </nav>
+      <input type="hidden" id="level" value="<?php echo htmlspecialchars($level); ?>" onchange="fetchYear()">
+      <input type="hidden" id="staff" value="<?php echo htmlspecialchars($staff); ?>" onchange="fetchYear()">
       <div class="col-lg-12">
         <div class="row">
+        <?php if ($level > 2): ?>
           <div class="col-xxl-2 col-md-4">
             <div class="form-floating mb-3">
               <select class="form-select" id="Sales" aria-label="Sales"onchange="fetchYear()">
@@ -553,6 +556,7 @@ if($staff === 0 || $level == 0){
               <label for="Sales">Sales</label>
             </div>
           </div>
+          <?php endif; ?>
           <div class="col-xxl-2 col-md-4">
             <div class="form-floating mb-3">
               <select class="form-select" id="is_new" aria-label="is_new"onchange="fetchYear()">

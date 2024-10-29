@@ -3,21 +3,27 @@ function fetchProduct(element) {
     console.error('No element was passed to fetchProduct.');
     return;
   }
-
+  let url;
   // Retrieve the data-segment-no from the clicked <a> element
   const segment = element.getAttribute('data-segment-no') || '999';
-  const Sales = document.getElementById('Sales').value;
   const year_no = document.getElementById('year').value;
-  const is_new = document.getElementById('is_new').value;
+  const level = document.getElementById('level').value;
+const staff = document.getElementById('staff').value;
+const is_new = document.getElementById('is_new').value;
+if(level >1){
   const channel = document.getElementById('channel').value;
+  const Sales = document.getElementById('Sales').value;
+  url = `/ERP/reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
+  }else if(level == 1){
+    url = `/ERP/reportchart.php?year_no=${year_no}&segment=${segment}&staff=${staff}&is_new=${is_new}`;
+  }
+
+
 
   if (!segment) {
     console.error('No segment found on the clicked element.');
     return;
   }
-
-  // Construct the URL with the segment
-  let url = `/ERP/reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
 
   // Fetch the data from the server
   fetch(url)

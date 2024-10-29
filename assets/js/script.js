@@ -1,13 +1,19 @@
 function fetchYear() {
+  let url;
 const year_no = document.getElementById('year').value;
 const month_no = document.getElementById('month').value;
-const channel = document.getElementById('channel').value;
-const Sales = document.getElementById('Sales').value;
-const is_new = document.getElementById('is_new').value;
-let url;
+const level = document.getElementById('level').value;
 
-  url = `revenue.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
-  
+const is_new = document.getElementById('is_new').value;
+if(level >1){
+  const channel = document.getElementById('channel').value;
+  const Sales = document.getElementById('Sales').value;
+  url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
+  }else if(level == 1){
+    const channel = 'N'
+    const Sales = document.getElementById('staff').value;
+    url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
+  }
 
 fetch(url)
 .then(response => {
@@ -26,13 +32,20 @@ fetch(url)
 
 }
 function fetchData(period) {
-  const year_no = document.getElementById('year').value;
-const month_no = document.getElementById('month').value;
-const channel = document.getElementById('channel').value;
-const Sales = document.getElementById('Sales').value;
-const is_new = document.getElementById('is_new').value;
   let url;
-  url = `revenue.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
+  const year_no = document.getElementById('year').value;
+  const month_no = document.getElementById('month').value;
+  const level = document.getElementById('level').value;
+  
+  const is_new = document.getElementById('is_new').value;
+  if(level >1){
+    const channel = document.getElementById('channel').value;
+    const Sales = document.getElementById('Sales').value;
+    url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
+    }else if(level == 1){
+      const Sales = document.getElementById('staff').value;
+      url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&Sales=${Sales}&is_new=${is_new}`;
+    }
 
   fetch(url, {
       method: 'POST',
@@ -290,9 +303,10 @@ const percentage = params.percent.toFixed(2);
       chart.render();
     }*/
     document.addEventListener('DOMContentLoaded', fetchYear);
-
+    const level = document.getElementById('level').value;
     document.addEventListener('DOMContentLoaded', (event) => {
-      fetch('staff_id.php')
+      if (level > 1) {
+      fetch('/ERP/staff_id.php')
           .then(response => {
               if (!response.ok) {
                   throw new Error(`HTTP error! Status: ${response.status}`);
@@ -309,6 +323,7 @@ const percentage = params.percent.toFixed(2);
               });
           })
           .catch(error => console.error('Error fetching data:', error));
+        }
   });
 
   const monthSelect = document.getElementById('month');

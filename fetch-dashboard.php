@@ -8,7 +8,8 @@ $objCon = connectDB(); // Connect to the database
 if ($objCon === false) {
     die(print_r(sqlsrv_errors(), true));
 }
-
+include './header.php';
+$level = htmlspecialchars($level);
 $currentYear = date("Y");
 $currentMonth = date("m");
 $year_no = isset($_GET['year_no']) ? $_GET['year_no'] : $currentYear;
