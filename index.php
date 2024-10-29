@@ -328,11 +328,13 @@ h2 {
               <i class="bi bi-circle"></i><span>CRM</span>
             </a>
           </li>
+          <?php if ($Role == 'OPL'&& $Role == 'SUPER ADMIN'): ?>
           <li>
             <a href="./MA">
               <i class="bi bi-circle"></i><span>Maintanance</span>
             </a>
           </li>
+          <?php endif; ?>
         </ul>
       </li>
 
@@ -453,7 +455,7 @@ h2 {
             </a>
           </li-->
           <li>
-            <a href="tables-data.php">
+            <a href="CRM/Update-Status.php">
               <i class="bi bi-circle"></i><span>Update Status</span>
             </a>
           </li>
@@ -521,7 +523,7 @@ h2 {
       </li-->
       <?php if ($level > 2): ?>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="permission.php">
+        <a class="nav-link collapsed" href="./Permission">
           <i class="bi bi-question-circle"></i>
           <span>Permission</span>
         </a>

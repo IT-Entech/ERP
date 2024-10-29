@@ -3,7 +3,6 @@ function fetchYear() {
 const year_no = document.getElementById('year').value;
 const month_no = document.getElementById('month').value;
 const level = document.getElementById('level').value;
-
 const is_new = document.getElementById('is_new').value;
 if(level >1){
   const channel = document.getElementById('channel').value;
