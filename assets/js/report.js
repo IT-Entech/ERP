@@ -17,7 +17,7 @@ function fetchProduct(element) {
   }
 
   // Construct the URL with the segment
-  let url = `reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
+  let url = `/ERP/reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
 
   // Fetch the data from the server
   fetch(url)
