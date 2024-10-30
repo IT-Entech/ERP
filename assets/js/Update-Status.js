@@ -2,16 +2,15 @@ function fetchData() {
   let url;
   const year_no = document.getElementById('year').value;
   const month_no = document.getElementById('month').value;
-  const track = document.getElementById('tracking').value;
+  const tracking = document.getElementById('tracking').value;
   const level = document.getElementById('level').value;
-  if(level >1){
-    const Sales = document.getElementById('Sales').value;
-    url = `/ERP/fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${track}&Sales=${Sales}`;
-    }else if(level == 1){
-      const Sales = document.getElementById('staff').value;
-      url = `/ERP/fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${track}&Sales=${Sales}`;
-    }
-
+  let Sales;
+if (level > 1) {
+    Sales = document.getElementById('sales').value;
+} else if (level == 1) {
+    Sales = document.getElementById('staff').value;
+}
+    url = `/ERP/fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${tracking}&Sales=${Sales}`;
     fetch(url)
     .then(response => {
       if (!response.ok) {
@@ -152,7 +151,7 @@ document.addEventListener('DOMContentLoaded', fetchData);
 const level = document.getElementById('level').value;
 document.addEventListener('DOMContentLoaded', (event) => {
   if (level > 1) {
-  fetch('staff_id.php')
+  fetch('/ERP/staff_id.php')
       .then(response => {
           if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
@@ -160,7 +159,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           return response.json();
       })
       .then(data => {
-          const selectElement = document.getElementById('Sales');
+          const selectElement = document.getElementById('sales');
           data.forEach(item => {
               const option = document.createElement('option');
               option.value = item.staff_id;

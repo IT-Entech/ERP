@@ -264,7 +264,7 @@ if($staff === 0 || $level == 0){
             </li-->
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="/log_out.php">
+              <a class="dropdown-item d-flex align-items-center" href="../log_out.php">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -526,7 +526,7 @@ if($staff === 0 || $level == 0){
       <h1>Data Tables</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="../">Home</a></li>
           <li class="breadcrumb-item">Tables</li>
           <li class="breadcrumb-item active">Data</li>
         </ol>
@@ -568,7 +568,7 @@ if($staff === 0 || $level == 0){
               <div class="col-xxl-3 col-md-6">
                 <div class="form-floating mb-3">
                   <select class="form-select" id="month" aria-label="Month"onchange="fetchData()">
-                   
+                  <option selected value="N">-</option>
                   </select>
                   <label for="month">Month</label>
                 </div>

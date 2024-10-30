@@ -328,7 +328,7 @@ h2 {
               <i class="bi bi-circle"></i><span>CRM</span>
             </a>
           </li>
-          <?php if ($Role == 'OPL'&& $Role == 'SUPER ADMIN'): ?>
+          <?php if ($level == 3 || $Role == 'SUPER ADMIN' && $Role == 'OPL'): ?>
           <li>
             <a href="./MA">
               <i class="bi bi-circle"></i><span>Maintanance</span>

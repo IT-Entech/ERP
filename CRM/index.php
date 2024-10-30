@@ -5,7 +5,7 @@ $staff = htmlspecialchars($staff);
 $level = htmlspecialchars($level);
 $Role = htmlspecialchars($role);
 if($staff === 0 || $level == 0){
-  echo '<script>alert("Can not enter this site");window.location="./pages-login.html";</script>';
+  echo '<script>alert("Can not enter this site");window.location="../pages-login.html";</script>';
 }
 ?>
 <!DOCTYPE html>

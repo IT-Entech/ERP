@@ -2,8 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include_once('C:\xampp\htdocs\connectDB\connectDB.php');
-$objCon = connectDB(); // Connect to the database
+include_once '../connectDB/connectDB.php';
+$objCon = connectDB(); 
 
 if ($objCon === false) {
     die(json_encode(["error" => sqlsrv_errors()]));
@@ -14,15 +14,18 @@ $currentMonth = date("m");
 $Sales = isset($_GET['Sales']) ? $_GET['Sales'] : NULL;
 $year_no = isset($_GET['year_no']) ? $_GET['year_no'] : $currentYear;
 $month_no = isset($_GET['month_no']) ? $_GET['month_no'] : $currentMonth;
-/*$channel = isset($_GET['channel']) ? $_GET['channel'] : NULL;*/
+$track = isset($_GET['tracking']) ? $_GET['tracking'] : NULL;
 
-if($year_no <> 0 && $month_no <> 0 && $Sales == 'N'){
+if($year_no <> 0 && $month_no == 'N' && $Sales == 'N' && $track == 'N'){
     $sqlappoint = "SELECT FORMAT(A.appoint_date, 'dd-MM-yyy') As appoint_date,A.customer_name, A.qt_no,FORMAT(A.so_amount, 'N2') AS so_amount,pp.prospect_name,pp.prospect_code, A.remark,ms.status_name,ms.status_code,A.reasoning
                    FROM cost_sheet_head A
                    LEFT JOIN ms_appoint_status ms ON a.is_tracking = ms.status_code
 				   LEFT JOIN ms_prospect pp ON a.is_prospect = pp.prospect_code
                    LEFT JOIN  so_customer_status B ON A.qt_no = B.qt_no
-                   WHERE A.is_prospect <> '00' AND MONTH(A.qt_date) = ? AND YEAR(A.qt_date) = ? AND is_status <> 'C'  AND B.so_no IS NULL
+                   WHERE A.is_prospect <> '00' 
+                   AND is_status <> 'C'  
+                   AND B.so_no IS NULL
+                   AND YEAR(A.qt_date) = ?
                    ORDER BY qt_date DESC";
      $sqlrevenue = "SELECT 
                     FORMAT(DATEFROMPARTS(A.year_no, A.month_no,1), 'yyyy-MM') AS format_date,
@@ -31,8 +34,7 @@ if($year_no <> 0 && $month_no <> 0 && $Sales == 'N'){
                     FROM 
                     View_SO_SUM A
                     WHERE 
-                    A.month_no = ?
-                    AND A.year_no = ?
+                    A.year_no = ?
                     GROUP BY 
                     FORMAT(DATEFROMPARTS(A.year_no, A.month_no,1), 'yyyy-MM')
                     ORDER BY 
@@ -44,7 +46,7 @@ if($year_no <> 0 && $month_no <> 0 && $Sales == 'N'){
                     FROM 
                     appoint_head
                     WHERE 
-                    month_no = ? AND year_no = ? AND qt_no IS NULL
+                    year_no = ? AND qt_no IS NULL
                     GROUP BY 
                     FORMAT(appoint_date, 'yyyy-MM')
                     ORDER BY 
@@ -70,7 +72,7 @@ if($year_no <> 0 && $month_no <> 0 && $Sales == 'N'){
                   FROM 
                   cost_sheet_head A
                   WHERE 
-                  is_status <> 'C'  AND MONTH(qt_date) = ?  AND YEAR(qt_date) = ? 
+                  is_status <> 'C'  AND YEAR(qt_date) = ? 
 				  AND  NOT EXISTS (SELECT * FROM so_detail B WHERE A.qt_no = B.qt_no)
                   GROUP BY 
                   FORMAT(qt_date, 'yyyy-MM')
