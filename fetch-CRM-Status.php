@@ -78,29 +78,48 @@ if($year_no <> 0 && $month_no == 'N' && $Sales == 'N' && $track == 'N'){
                   FORMAT(qt_date, 'yyyy-MM')
                   ORDER BY 
                   format_date ASC";
-                   $params = array($month_no, $year_no);
-}else{
+                   $params = array($year_no);
+}else if($year_no <> 0 && $month_no != 'N' && $Sales == 'N' && $track == 'N'){
     $sqlappoint = "SELECT FORMAT(A.appoint_date, 'dd-MM-yyy') As appoint_date,A.customer_name, A.qt_no,FORMAT(A.so_amount, 'N2') AS so_amount,pp.prospect_name,pp.prospect_code, A.remark,ms.status_name,ms.status_code,A.reasoning
                    FROM cost_sheet_head A
                    LEFT JOIN ms_appoint_status ms ON a.is_tracking = ms.status_code
 				   LEFT JOIN ms_prospect pp ON a.is_prospect = pp.prospect_code
                    LEFT JOIN  so_customer_status B ON A.qt_no = B.qt_no
-                   WHERE A.is_prospect <> '00' AND MONTH(A.qt_date) = ? AND YEAR(A.qt_date) = ? AND A.staff_id = ?  AND is_status <> 'C'  AND B.so_no IS NULL
+                   WHERE A.is_prospect <> '00' 
+                   AND is_status <> 'C'  
+                   AND B.so_no IS NULL
+                   AND YEAR(A.qt_date) = ?
+                   AND MONTH(A.qt_date) = ?
                    ORDER BY qt_date DESC";
+     $sqlrevenue = "SELECT 
+                    FORMAT(DATEFROMPARTS(A.year_no, A.month_no,1), 'yyyy-MM') AS format_date,
+                    SUM(A.total_before_vat) AS so_amount,
+                    COUNT(A.so_no) AS so_no
+                    FROM 
+                    View_SO_SUM A
+                    WHERE 
+                    A.year_no = ?
+                    AND A.month_no = ?
+                    GROUP BY 
+                    FORMAT(DATEFROMPARTS(A.year_no, A.month_no,1), 'yyyy-MM')
+                    ORDER BY 
+                    format_date ASC";
      $sqlap = "SELECT 
-     FORMAT(appoint_date, 'yyyy-MM') AS format_date,
-     COUNT(CASE WHEN qt_no IS NULL AND is_status <> 4 THEN appoint_no END) AS appoint_no,
-     COUNT(CASE WHEN qt_no IS NULL AND is_status = 4 THEN appoint_no END) AS specific_appoint_no
-     FROM 
-     appoint_head
-     WHERE 
-     month_no = ? AND year_no = ? AND staff_id = ? AND qt_no IS NULL
-     GROUP BY 
-     FORMAT(appoint_date, 'yyyy-MM')
-     ORDER BY 
-     format_date ASC";
-         $sqlcostsheet = "SELECT 
-         FORMAT(qt_date, 'yyyy-MM') AS format_date,
+                    FORMAT(appoint_date, 'yyyy-MM') AS format_date,
+                    COUNT(CASE WHEN qt_no IS NULL AND is_status <> 4 THEN appoint_no END) AS appoint_no,
+                    COUNT(CASE WHEN qt_no IS NULL AND is_status = 4 THEN appoint_no END) AS specific_appoint_no
+                    FROM 
+                    appoint_head
+                    WHERE 
+                    qt_no IS NULL
+                    AND year_no = ? 
+                    AND month_no = ?
+                    GROUP BY 
+                    FORMAT(appoint_date, 'yyyy-MM')
+                    ORDER BY 
+                    format_date ASC";
+     $sqlcostsheet = "SELECT 
+                  FORMAT(qt_date, 'yyyy-MM') AS format_date,
 	                SUM(so_amount)AS so_amount,
                   COUNT(A.qt_no) AS qt_no,
 				  COUNT(CASE WHEN  is_prospect IS NULL    THEN A.qt_no END) AS Unknownss,
@@ -117,30 +136,88 @@ if($year_no <> 0 && $month_no == 'N' && $Sales == 'N' && $track == 'N'){
 				  COUNT(CASE WHEN  is_prospect = '06' THEN A.qt_no END) AS pipeline,
 				  SUM(CASE WHEN  is_prospect = '06'AND is_tracking IN ('1','3') THEN so_amount END) AS pipeline_amount,
 				  SUM(CASE WHEN  is_prospect = '06' AND is_tracking IN ('2','4') THEN so_amount END) AS lost_pipeline_amount
-         FROM 
-         cost_sheet_head A
-         WHERE 
-         is_status <> 'C'  AND MONTH(qt_date) = ?  AND YEAR(qt_date) = ? AND staff_id = ? 
-         AND  NOT EXISTS (SELECT * FROM so_detail B WHERE A.qt_no = B.qt_no)
-         GROUP BY 
-         FORMAT(qt_date, 'yyyy-MM')
-         ORDER BY 
-         format_date ASC";
-                    $sqlrevenue = "SELECT 
+                  FROM 
+                  cost_sheet_head A
+                  WHERE 
+                  is_status <> 'C' 
+                  AND YEAR(qt_date) = ? 
+                  AND YEAR(qt_date) = ? 
+				  AND  NOT EXISTS (SELECT * FROM so_detail B WHERE A.qt_no = B.qt_no)
+                  GROUP BY 
+                  FORMAT(qt_date, 'yyyy-MM')
+                  ORDER BY 
+                  format_date ASC";
+                   $params = array($year_no, $month_no);
+}else if($year_no <> 0 && $month_no != 'N' && $track != 'N' && $Sales == 'N'){
+    $sqlappoint = "SELECT FORMAT(A.appoint_date, 'dd-MM-yyy') As appoint_date,A.customer_name, A.qt_no,FORMAT(A.so_amount, 'N2') AS so_amount,pp.prospect_name,pp.prospect_code, A.remark,ms.status_name,ms.status_code,A.reasoning
+                   FROM cost_sheet_head A
+                   LEFT JOIN ms_appoint_status ms ON a.is_tracking = ms.status_code
+				   LEFT JOIN ms_prospect pp ON a.is_prospect = pp.prospect_code
+                   LEFT JOIN  so_customer_status B ON A.qt_no = B.qt_no
+                   WHERE A.is_prospect <> '00' 
+                   AND is_status <> 'C'  
+                   AND B.so_no IS NULL
+                   AND YEAR(A.qt_date) = ?
+                   AND MONTH(A.qt_date) = ?
+                   AND is_tracking = ?
+                   ORDER BY qt_date DESC";
+     $sqlrevenue = "SELECT 
                     FORMAT(DATEFROMPARTS(A.year_no, A.month_no,1), 'yyyy-MM') AS format_date,
                     SUM(A.total_before_vat) AS so_amount,
                     COUNT(A.so_no) AS so_no
                     FROM 
                     View_SO_SUM A
                     WHERE 
-                    A.month_no = ?
-                    AND A.year_no = ?
-                    AND A.staff_id = ?
+                    A.year_no = ?
+                    AND A.month_no = ?
                     GROUP BY 
                     FORMAT(DATEFROMPARTS(A.year_no, A.month_no,1), 'yyyy-MM')
                     ORDER BY 
                     format_date ASC";
-                   $params = array($month_no, $year_no, $Sales);
+     $sqlap = "SELECT 
+                    FORMAT(appoint_date, 'yyyy-MM') AS format_date,
+                    COUNT(CASE WHEN qt_no IS NULL AND is_status <> 4 THEN appoint_no END) AS appoint_no,
+                    COUNT(CASE WHEN qt_no IS NULL AND is_status = 4 THEN appoint_no END) AS specific_appoint_no
+                    FROM 
+                    appoint_head
+                    WHERE 
+                    qt_no IS NULL
+                    AND year_no = ? 
+                    AND month_no = ?
+                    GROUP BY 
+                    FORMAT(appoint_date, 'yyyy-MM')
+                    ORDER BY 
+                    format_date ASC";
+     $sqlcostsheet = "SELECT 
+                  FORMAT(qt_date, 'yyyy-MM') AS format_date,
+	                SUM(so_amount)AS so_amount,
+                  COUNT(A.qt_no) AS qt_no,
+				  COUNT(CASE WHEN  is_prospect IS NULL    THEN A.qt_no END) AS Unknownss,
+				   COUNT(CASE WHEN  print_qt_count = 0   THEN A.qt_no END) AS Unknowns,
+				 COUNT(CASE WHEN  is_prospect = '00' AND print_qt_count = 0 THEN A.qt_no END) AS Unknown,
+				  SUM(CASE WHEN  is_prospect = '00' AND is_tracking IN ('1','3') AND print_qt_count = 0 THEN so_amount END) AS Unknown_amount,
+				  SUM(CASE WHEN  is_prospect = '00' AND is_tracking IN ('2','4') AND print_qt_count = 0 THEN so_amount END) AS lost_Unknown_amount,
+				  COUNT(CASE WHEN  is_prospect = '05' THEN A.qt_no END) AS potential,
+				  SUM(CASE WHEN  is_prospect = '05' AND is_tracking IN ('1','3') THEN so_amount END) AS potential_amount,
+				  SUM(CASE WHEN  is_prospect = '05' AND is_tracking IN ('2','4') THEN so_amount END) AS lost_potential_amount,
+				  COUNT(CASE WHEN  is_prospect = '04' THEN A.qt_no END) AS prospect,
+				  SUM(CASE WHEN  is_prospect = '04'AND is_tracking IN ('1','3') THEN so_amount END) AS prospect_amount,
+				   SUM(CASE WHEN  is_prospect = '04' AND is_tracking IN ('2','4') THEN so_amount END) AS lost_prospect_amount,
+				  COUNT(CASE WHEN  is_prospect = '06' THEN A.qt_no END) AS pipeline,
+				  SUM(CASE WHEN  is_prospect = '06'AND is_tracking IN ('1','3') THEN so_amount END) AS pipeline_amount,
+				  SUM(CASE WHEN  is_prospect = '06' AND is_tracking IN ('2','4') THEN so_amount END) AS lost_pipeline_amount
+                  FROM 
+                  cost_sheet_head A
+                  WHERE 
+                  is_status <> 'C' 
+                  AND YEAR(qt_date) = ? 
+                  AND YEAR(qt_date) = ? 
+				  AND  NOT EXISTS (SELECT * FROM so_detail B WHERE A.qt_no = B.qt_no)
+                  GROUP BY 
+                  FORMAT(qt_date, 'yyyy-MM')
+                  ORDER BY 
+                  format_date ASC";
+                   $params = array($year_no, $month_no, $track);
 }
 
 $stmt = sqlsrv_query($objCon, $sqlappoint, $params);

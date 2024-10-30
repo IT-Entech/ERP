@@ -5,38 +5,44 @@ function fetchData() {
   const tracking = document.getElementById('tracking').value;
   const level = document.getElementById('level').value;
   let Sales;
-if (level > 1) {
-    Sales = document.getElementById('sales').value;
-} else if (level == 1) {
-    Sales = document.getElementById('staff').value;
+  
+  if (level > 1) {
+      Sales = document.getElementById('sales').value;
+  } else if (level == 1) {
+      Sales = document.getElementById('staff').value;
+  }
+
+  url = `/ERP/fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${tracking}&Sales=${Sales}`;
+  
+  console.log('Fetching data from URL:', url); // Log the URL to ensure it's correct
+
+  fetch(url)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json(); // Expecting JSON response
+      })
+      .then(data => {
+          console.log('Fetched Data:', data); // Log the data to check if it's correct
+          updateTable(data); // Ensure updateTable is defined and works correctly
+      })
+      .catch(error => console.error('Error fetching data:', error));
 }
-    url = `/ERP/fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${tracking}&Sales=${Sales}`;
-    fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Data:', data); // Log the data to check the response
-      updateTable(data);
-    })
-    .catch(error => console.error('Error fetching data:', error));
-    }
+
 
 function updateTable(data) {
   const tbody = document.querySelector('#tableAP tbody');
   tbody.innerHTML = '';
 
-  data.forEach((row, index) => {
+  data.tableData.forEach((row, index) => {
     const tr = document.createElement('tr');
 
     const select = document.createElement('select');
     select.id = `status-badge-${index + 1}`;
     select.name = `status-badge-${index + 1}`;
     select.style.cursor = 'pointer';
-    select.className = getBadgeClass(row.status_name); // Use the function to get the correct class
+    select.className = getBadgeClass(row.status_name); 
   
 
     const options = [
@@ -85,8 +91,10 @@ function updateTable(data) {
     reasonInput.className = 'form-control';
     reasonInput.id = `reason${index + 1}`;
     reasonInput.name = `reason${index + 1}`;
-    reasonInput.value = row.reasoning;
+    reasonInput.value = row.reasoning ? row.reasoning : '';
     reasonInput.disabled = row.status_code != 1 && row.status_code != 2;//
+    const remark = row.remark ? row.remark : '';
+    const date = row.appoint_date ? row.appoint_date : '';
 
 
 
@@ -103,12 +111,12 @@ function updateTable(data) {
     });
 
     tr.innerHTML = `
-      <td><a href= "forms-appoint.html?ap=${row.appoint_no}" id= "${row.date}" value ="${row.date}" >${row.date}</a></td>
-      <td>${row.name}</td>
+      <td><a href= "forms-appoint.html?ap=${row.appoint_no}" id= "${date}" value ="${date}" >${date}</a></td>
+      <td>${row.customer_name}</td>
       <td>${row.qt_no}</td>
        <td>${row.so_amount}</td>
       <td>${select1.outerHTML}</td>
-      <td><input type="text" class="form-control" id="remark${row.appoint_no}${index + 1}"name="${row.appoint_no}"value="${row.remark}"</td>
+      <td><input type="text" class="form-control" id="remark${row.appoint_no}${index + 1}"name="${row.appoint_no}"value="${remark}"</td>
       <td>${select.outerHTML}</td>
       <td>${reasonInput.outerHTML}</td>
     `;

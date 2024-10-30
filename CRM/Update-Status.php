@@ -556,10 +556,10 @@ if($staff === 0 || $level == 0){
                   <div class="col-xxl-3 col-md-4">
                     <div class="form-floating mb-3">
                       <select class="form-select" id="tracking" aria-label="tracking"onchange="fetchData()">
-                        <option selected value="N">-</option>
+                        <option value="N">-</option>
                         <option value="1">ได้งาน</option>
                         <option value="2">ไม่ได้งาน</option>
-                        <option value="3">อยู่ระหว่างการติดตาม</option>
+                        <option selected value="3">อยู่ระหว่างการติดตาม</option>
                         <option value="4">ไม่เสนอราคา</option>
                       </select>
                       <label for="tracking">Status</label>
