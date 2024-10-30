@@ -32,6 +32,99 @@ function fetchData() {
 
 
 function updateTable(data) {
+
+  let totalap = 0;
+  let totalapNoqt = 0;
+  let totalSumunknown = 0;
+  let totalvalueunknown = 0;
+  let totalSumpotential = 0;
+  let totalvaluepotential = 0;
+  let totalvaluepropect = 0;
+  let totalSumpropect = 0;
+  let totalvaluepipeline = 0;
+  let totalSumpipeline= 0;
+  let totalSum = 0;
+  let totalSumso = 0;
+
+  data.revenueData.forEach(revenue => {
+    totalSum += parseFloat(revenue.so_amount)|| 0;
+    totalSumso += parseFloat(revenue.so_no)|| 0;
+    });
+          
+    data.apData.forEach(ap => {
+    totalap += parseFloat(ap.appoint_no)|| 0;
+    totalapNoqt += parseFloat(ap.specific_appoint_no)|| 0;
+    });
+  
+    data.qtData.forEach(qt => {
+      totalvalueunknown += parseFloat(qt.Unknown)|| 0;
+      totalSumunknown += parseFloat(qt.Unknown_amount)|| 0;
+      totalvaluepotential += parseFloat(qt.potential)|| 0;
+      totalSumpotential += parseFloat(qt.potential_amount)|| 0;
+      totalvaluepropect += parseFloat(qt.prospect)|| 0;
+      totalSumpropect += parseFloat(qt.prospect_amount)|| 0;
+      totalvaluepipeline += parseFloat(qt.pipeline)|| 0;
+      totalSumpipeline += parseFloat(qt.pipeline_amount)|| 0;
+      });
+  
+          const countElementap = document.getElementById('appoint');
+          countElementap.textContent = totalap.toLocaleString('en-US', {
+          }); 
+  
+          const countElementapNoqt = document.getElementById('apNoqt');
+          countElementapNoqt.textContent = totalapNoqt.toLocaleString('en-US', {
+          }); 
+  
+          const UnknownElement = document.getElementById('qt_value');
+          UnknownElement.textContent = totalSumunknown.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+          }); 
+  
+          const UnknownElement1 = document.getElementById('qt_number');
+          UnknownElement1.textContent = totalvalueunknown.toLocaleString('en-US', {
+          }); 
+  
+          const potentialElement = document.getElementById('qt_potential_value');
+          potentialElement.textContent = totalSumpotential.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+          }); 
+  
+          const potentialElement1 = document.getElementById('qt_potential_number');
+          potentialElement1.textContent = totalvaluepotential.toLocaleString('en-US', {
+          });  
+  
+          const propectElement = document.getElementById('qt_prospect_value');
+          propectElement.textContent = totalSumpropect.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+          }); 
+  
+          const propectElement1 = document.getElementById('qt_prospect_number');
+          propectElement1.textContent = totalvaluepropect.toLocaleString('en-US', {
+          });  
+  
+          const pipelineElement = document.getElementById('qt_pipeline_value');
+          pipelineElement.textContent = totalSumpipeline.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+          }); 
+  
+          const pipelineElement1 = document.getElementById('qt_pipeline_number');
+          pipelineElement1.textContent = totalvaluepipeline.toLocaleString('en-US', {
+          });  
+  
+          const revenueElement = document.getElementById('revenue');
+          revenueElement.textContent = totalSum.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+          }); 
+  
+          const countElement2 = document.getElementById('so_number');
+          countElement2.textContent = totalSumso.toLocaleString('en-US', {
+          });  
+          
   const tbody = document.querySelector('#tableAP tbody');
   tbody.innerHTML = '';
 
