@@ -1,13 +1,4 @@
-<?php 
-include './header.php';
-$name = htmlspecialchars($name);
-$staff = htmlspecialchars($staff);
-$level = htmlspecialchars($level);
-$Role = htmlspecialchars($role);
-if($staff === 0 || $level == 0){
-  echo '<script>alert("Can not enter this site");window.location="./pages-login.html";</script>';
-}
-?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -255,14 +246,14 @@ h2 {
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="assets/img/person-circle.svg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2"> <?php echo $name; ?></span>
+            <span id="name-display"  class="d-none d-md-block dropdown-toggle ps-2"></span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-             <!--li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
+             <li class="dropdown-header">
+              <h6 id="name-display1"></h6>
               <span>Web Designer</span>
-            </li-->
+            </li>
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -328,13 +319,11 @@ h2 {
               <i class="bi bi-circle"></i><span>CRM</span>
             </a>
           </li>
-          <?php if ($level == 3 || $Role == 'SUPER ADMIN' && $Role == 'OPL'): ?>
-          <li>
+          <li id="maintanance-nav" style="display:none">
             <a href="./MA">
               <i class="bi bi-circle"></i><span>Maintanance</span>
             </a>
           </li>
-          <?php endif; ?>
         </ul>
       </li>
 
@@ -515,20 +504,18 @@ h2 {
 
       <li class="nav-heading">Pages</li>
 
-      <!--li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link collapsed" href="users-profile.html">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
-      </li-->
-      <?php if ($level > 2): ?>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="./Permission">
+      </li>
+      <li  id="permission-nav" style="display:block" class="nav-item">
+        <a class="nav-link collapsed" href="./permission/">
           <i class="bi bi-question-circle"></i>
           <span>Permission</span>
         </a>
       </li>
-      <?php endif; ?>
       <!--li class="nav-item">
         <a class="nav-link collapsed" href="pages-contact.html">
           <i class="bi bi-envelope"></i>
@@ -664,6 +651,34 @@ h2 {
     setBgGreet();
     getName();
   </script>
+  <script>
+    fetch('./header.php')
+             .then(response => response.json()) // Parse the JSON response
+             .then(data => {
+                 // Access the data
+                 const { name, staff, level, role } = data;
+   
+                 // Check conditions based on fetched data
+                 if (staff === 0 || level == 0) {
+                     alert("Can not enter this site");
+                     window.location.href = "../pages-login.html"; // Redirect to login
+                 } else {
+                   if (level == 3 || role == 'OPL') {
+               // Show the permission nav item
+               document.getElementById('maintanance-nav').style.display = 'block';
+           }else if(level < 3){
+             document.getElementById('permission-nav').style.display = 'none';
+           }
+                     document.getElementById('name-display').textContent = name;
+                     document.getElementById('name-display1').textContent = name;
+                     console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
+                     // Continue with other logic if necessary
+                 }
+             })
+             .catch(error => {
+                 console.error('Error fetching data:', error);
+             });
+   </script>
 </main>
 
 

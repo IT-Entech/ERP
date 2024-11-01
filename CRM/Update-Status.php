@@ -4,7 +4,7 @@ $staff = htmlspecialchars($staff);
 $level = htmlspecialchars($level);
 $Role = htmlspecialchars($role);
 if($staff === 0 || $level == 0){
-  echo '<script>alert("Can not enter this site");window.location="./pages-login.html";</script>';
+  echo '<script>alert("Can not enter this site");window.location="../pages-login.html";</script>';
 }
 ?>
 <!DOCTYPE html>
@@ -233,8 +233,8 @@ if($staff === 0 || $level == 0){
               <hr class="dropdown-divider">
             </li>
 
-            <!--li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="../users-profile.html">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -244,7 +244,7 @@ if($staff === 0 || $level == 0){
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="../users-profile.html">
                 <i class="bi bi-gear"></i>
                 <span>Account Settings</span>
               </a>
@@ -253,7 +253,7 @@ if($staff === 0 || $level == 0){
               <hr class="dropdown-divider">
             </li>
 
-            <li>
+            <!--li>
               <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
                 <i class="bi bi-question-circle"></i>
                 <span>Need Help?</span>
@@ -467,12 +467,12 @@ if($staff === 0 || $level == 0){
 
       <li class="nav-heading">Pages</li>
 
-      <!--li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../users-profile.html">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
-      </li--><!-- End Profile Page Nav -->
+      </li><!-- End Profile Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="permission.php">

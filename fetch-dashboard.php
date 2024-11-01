@@ -8,7 +8,7 @@ $objCon = connectDB(); // Connect to the database
 if ($objCon === false) {
     die(print_r(sqlsrv_errors(), true));
 }
-include './header.php';
+include_once './header.php';
 $level = htmlspecialchars($level);
 $currentYear = date("Y");
 $currentMonth = date("m");

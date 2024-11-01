@@ -3,7 +3,7 @@ function fetchData() {
   const month_no = document.getElementById('month').value;
   /*const channel = document.getElementById('channel').value;*/
   const Sales = document.getElementById('sales').value;
-  const staff = document.getElementById('staff').value;
+  const staff = document.getElementById('fetch-staff').value;
   let url;
 
   url = `api.php?year_no=${year_no}&month_no=${month_no}&Sales=${Sales}&staff=${staff}`;

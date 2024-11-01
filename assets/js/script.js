@@ -1,40 +1,74 @@
+fetch('../header.php')
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+        const { name, staff, level, role } = data;
+
+        if (staff === 0 || level == 0) {
+            alert("Cannot enter this site");
+            window.location.href = "../pages-login.html"; // Redirect to login
+        } else {
+          
+          if (level == 3) {
+            document.getElementById('maintanance-nav').style.display = 'block';
+            document.getElementById('permission-nav').style.display = 'block';
+        } else if (level >= 2) {
+            document.getElementById('select-sale').style.display = 'block';
+        }
+            // Update hidden fields and display the user name
+            document.getElementById('fetch-level').value = level;
+            document.getElementById('fetch-staff').value = staff;
+            document.getElementById('name-display').textContent = name;
+            document.getElementById('name-display1').textContent = name;
+            console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+
+// Fetch year data and update the dashboard based on the selected values
 function fetchYear() {
-  let url;
-const year_no = document.getElementById('year').value;
-const month_no = document.getElementById('month').value;
-const level = document.getElementById('level').value;
-const is_new = document.getElementById('is_new').value;
-if(level >1){
-  const channel = document.getElementById('channel').value;
-  const Sales = document.getElementById('Sales').value;
-  url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
-  }else if(level == 1){
-    const channel = 'N'
-    const Sales = document.getElementById('staff').value;
-    url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
-  }
+    const year_no = document.getElementById('year').value;
+    const month_no = document.getElementById('month').value;
+    const level = document.getElementById('fetch-level').value;
+    const is_new = document.getElementById('is_new').value;
+    let channel; // Declare channel outside the condition
+    let Sales; // Declare Sales outside the condition
 
-fetch(url)
-.then(response => {
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
-})
-.then(data => {
-  console.log('Data:', data); // Log the data to check the response
-  updateTable(data);
-  updateChart(data.segmentData);
+    if (level > 1) {
+        channel = document.getElementById('channel').value; // Get value of channel
+        Sales = document.getElementById('Sales').value; // Get value of Sales
+    } else if (level == 1) {
+        channel = 'N'; // Set default channel value
+        Sales = document.getElementById('fetch-staff').value; // Get value of Sales
+    }
 
-})
-.catch(error => console.error('Error fetching data:', error));
+    // Construct the URL for fetching the dashboard data
+    const url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
 
+    console.log(`Level: ${level}, Channel: ${channel}, Month: ${month_no}, Year: ${year_no}, Sales: ${Sales}, is_new: ${is_new}`);
+
+    // Fetch dashboard data
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data:', data); // Log the data to check the response
+            updateTable(data); // Function to update the table
+            updateChart(data.segmentData); // Function to update the chart
+        })
+        .catch(error => console.error('Error fetching data:', error));
 }
+
 function fetchData(period) {
   let url;
   const year_no = document.getElementById('year').value;
   const month_no = document.getElementById('month').value;
-  const level = document.getElementById('level').value;
+  const level = document.getElementById('fetch-level').value;
   
   const is_new = document.getElementById('is_new').value;
   if(level >1){
@@ -42,7 +76,7 @@ function fetchData(period) {
     const Sales = document.getElementById('Sales').value;
     url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
     }else if(level == 1){
-      const Sales = document.getElementById('staff').value;
+      const Sales = document.getElementById('fetch-staff').value;
       url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&Sales=${Sales}&is_new=${is_new}`;
     }
 
@@ -302,7 +336,8 @@ const percentage = params.percent.toFixed(2);
       chart.render();
     }*/
     document.addEventListener('DOMContentLoaded', fetchYear);
-    const level = document.getElementById('level').value;
+    
+    const level = document.getElementById('fetch-level').value;
     document.addEventListener('DOMContentLoaded', (event) => {
       if (level > 1) {
       fetch('/ERP/staff_id.php')

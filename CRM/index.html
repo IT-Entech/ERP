@@ -1,13 +1,3 @@
-<?php 
-include '../header.php';
-$name = htmlspecialchars($name);
-$staff = htmlspecialchars($staff);
-$level = htmlspecialchars($level);
-$Role = htmlspecialchars($role);
-if($staff === 0 || $level == 0){
-  echo '<script>alert("Can not enter this site");window.location="../pages-login.html";</script>';
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -221,14 +211,14 @@ if($staff === 0 || $level == 0){
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="../assets/img/person-circle.svg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2"> <?php echo $name; ?></span>
+            <span id="name-display" class="d-none d-md-block dropdown-toggle ps-2"></span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-             <!--li class="dropdown-header">
+             <li id="name-display1"class="dropdown-header">
               <h6>Kevin Anderson</h6>
               <span>Web Designer</span>
-            </li-->
+            </li>
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -294,13 +284,11 @@ if($staff === 0 || $level == 0){
               <i class="bi bi-circle"></i><span>CRM</span>
             </a>
           </li>
-          <?php if ($Role == 'OPL'&& $Role == 'SUPER ADMIN'): ?>
-          <li>
+          <li id="maintanance-nav" style="display:none">
             <a href="../MA">
               <i class="bi bi-circle"></i><span>Maintanance</span>
             </a>
           </li>
-          <?php endif; ?>
         </ul>
       </li>
 
@@ -487,14 +475,12 @@ if($staff === 0 || $level == 0){
           <span>Profile</span>
         </a>
       </li-->
-      <?php if ($level > 2): ?>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="permission.php">
+      <li class="nav-item" id="permission-nav" style="display:none">
+        <a class="nav-link collapsed" href="../permission/">
           <i class="bi bi-question-circle"></i>
           <span>Permission</span>
         </a>
       </li>
-      <?php endif; ?>
       <!--li class="nav-item">
         <a class="nav-link collapsed" href="pages-contact.html">
           <i class="bi bi-envelope"></i>
@@ -545,20 +531,18 @@ if($staff === 0 || $level == 0){
         </ol>
         
       </nav>
-      <input type="hidden" id="level" value="<?php echo htmlspecialchars($level); ?>" onchange="fetchYear()">
-      <input type="hidden" id="staff" value="<?php echo htmlspecialchars($staff); ?>" onchange="fetchYear()">
+      <input type="hidden" id="fetch-level" value="" onchange="fetchYear()">
+      <input type="hidden" id="fetch-staff" value="" onchange="fetchYear()">
       <div class="col-lg-12">
         <div class="row">
-        <?php if ($level > 2): ?>
-          <div class="col-xxl-2 col-md-4">
+          <div class="col-xxl-2 col-md-4" id="select-sale" style="display:none">
             <div class="form-floating mb-3">
-              <select class="form-select" id="Sales" aria-label="Sales"onchange="fetchYear()">
-                <option selected value="N">-</option>
-              </select>
-              <label for="Sales">Sales</label>
+                <select class="form-select" id="Sales" aria-label="Sales" onchange="fetchYear()">
+                    <option selected value="N">-</option>
+                </select>
+                <label for="Sales">Sales</label>
             </div>
-          </div>
-          <?php endif; ?>
+        </div>
           <div class="col-xxl-2 col-md-4">
             <div class="form-floating mb-3">
               <select class="form-select" id="is_new" aria-label="is_new"onchange="fetchYear()">

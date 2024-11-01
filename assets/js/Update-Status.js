@@ -3,13 +3,13 @@ function fetchData() {
   const year_no = document.getElementById('year').value;
   const month_no = document.getElementById('month').value;
   const tracking = document.getElementById('tracking').value;
-  const level = document.getElementById('level').value;
+  const level = document.getElementById('fetch-level').value;
   let Sales;
   
   if (level > 1) {
       Sales = document.getElementById('sales').value;
   } else if (level == 1) {
-      Sales = document.getElementById('staff').value;
+      Sales = document.getElementById('fetch-staff').value;
   }
 
   url = `/ERP/fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${tracking}&Sales=${Sales}`;
@@ -280,7 +280,7 @@ function getBadgeClass(status1) {
 
 
 document.addEventListener('DOMContentLoaded', fetchData);
-const level = document.getElementById('level').value;
+const level = document.getElementById('fetch-level').value;
 document.addEventListener('DOMContentLoaded', (event) => {
   if (level > 1) {
   fetch('/ERP/staff_id.php')
