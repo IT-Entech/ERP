@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include_once('C:\xampp\htdocs\connectDB\connectDB.php');
+include_once '../../connectDB/connectDB.php';
 $objCon = connectDB(); // Connect to the database
 
 if ($objCon === false) {

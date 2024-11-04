@@ -1,34 +1,68 @@
+fetch('../header.php')
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+        const { name, staff, level, role } = data;
+        if (level >= '2') {
+          fetchStaffData();
+      }
+        if (staff === 0 || level == 0) {
+            alert("Cannot enter this site");
+            window.location.href = "../pages-login.html"; // Redirect to login
+        } else {
+            if (level == 3) {
+                document.getElementById('maintanance-nav').style.display = 'block';
+                document.getElementById('permission-nav').style.display = 'block';
+                document.getElementById('select-sale').style.display = 'block';
+            } else if (level >= 2) {
+                document.getElementById('select-sale').style.display = 'block';
+            }
+            // Update hidden fields and display the user name
+            document.getElementById('fetch-level').value = level;
+            document.getElementById('fetch-staff').value = staff;
+            document.getElementById('fetch-role').value = role;
+            document.getElementById('name-display').textContent = name;
+            document.getElementById('name-display1').textContent = name;
+
+            // Call fetchData after validation passes
+            fetchData(data);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+
 function fetchData() {
-  let url;
-  const year_no = document.getElementById('year').value;
-  const month_no = document.getElementById('month').value;
-  const tracking = document.getElementById('tracking').value;
-  const level = document.getElementById('fetch-level').value;
-  let Sales;
-  
-  if (level > 1) {
+
+    const year_no = document.getElementById('year').value;
+    const month_no = document.getElementById('month').value;
+    const tracking = document.getElementById('tracking').value;
+    const  staff = document.getElementById('fetch-staff').value;
+    const  level = document.getElementById('fetch-level').value;
+
+   let Sales;
+    if(level == 1){
+      Sales = staff;
+    }else if(level >= 2){
       Sales = document.getElementById('sales').value;
-  } else if (level == 1) {
-      Sales = document.getElementById('fetch-staff').value;
-  }
+    }
+    const url = `./fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${tracking}&Sales=${Sales}`;
 
-  url = `/ERP/fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${tracking}&Sales=${Sales}`;
-  
-  console.log('Fetching data from URL:', url); // Log the URL to ensure it's correct
+    //console.log('Fetching data from URL:', url); // Log the URL to ensure it's correct
 
-  fetch(url)
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          return response.json(); // Expecting JSON response
-      })
-      .then(data => {
-          console.log('Fetched Data:', data); // Log the data to check if it's correct
-          updateTable(data); // Ensure updateTable is defined and works correctly
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Expecting JSON response
+        })
+        .then(data => {
+            console.log('Fetched Data:', data); // Log the data to check if it's correct
+            updateTable(data); // Ensure updateTable is defined and works correctly
+        })
+        .catch(error => console.error('Error fetching data:', error));
 }
+
 
 
 function updateTable(data) {
@@ -280,9 +314,9 @@ function getBadgeClass(status1) {
 
 
 document.addEventListener('DOMContentLoaded', fetchData);
-const level = document.getElementById('fetch-level').value;
-document.addEventListener('DOMContentLoaded', (event) => {
-  if (level > 1) {
+
+
+function fetchStaffData() {
   fetch('/ERP/staff_id.php')
       .then(response => {
           if (!response.ok) {
@@ -295,13 +329,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
           data.forEach(item => {
               const option = document.createElement('option');
               option.value = item.staff_id;
-              option.textContent = item.fname_e || item.nick_name || item.staff_id; 
+              option.textContent = item.fname_e || item.nick_name || item.staff_id;
               selectElement.appendChild(option);
           });
       })
       .catch(error => console.error('Error fetching data:', error));
-    }
-});
+}
+
+
 const monthSelect = document.getElementById('month');
 const monthNames = [
   "January", "February", "March", "April", "May", "June", 

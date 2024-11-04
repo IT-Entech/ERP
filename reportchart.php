@@ -11,7 +11,6 @@ if ($objCon === false) {
 $currentYear = date("Y");
 $year_no = isset($_GET['year_no']) ? $_GET['year_no'] : $currentYear;
 $segment = isset($_GET['segment']) ? $_GET['segment'] : NULL;
-$Sales = isset($_GET['Sales']) ? $_GET['Sales'] : NULL;
 $is_new = isset($_GET['is_new']) ? $_GET['is_new'] : NULL;
 $channel = isset($_GET['channel']) ? $_GET['channel'] : NULL;
 
@@ -35,7 +34,7 @@ switch ($combinedKey) {
 }
 
 
-if($segment == '999' && $Sales == 'N' && $is_new == 0){
+if($segment == '999' && $is_new == 0){
 $sqlrevenue_accu = "SELECT 
     FORMAT(DATEFROMPARTS(A.year_no, A.month_no, 1), 'MMM') AS format_date,
     (
@@ -55,7 +54,7 @@ GROUP BY
 ORDER BY 
     A.month_no ASC";
 $params = array($year_no );
-}elseif($segment <> '999' && $Sales == 'N' && $is_new == 0){
+}elseif($segment <> '999'  && $is_new == 0){
     $sqlrevenue_accu = "SELECT 
     FORMAT(DATEFROMPARTS(A.year_no, A.month_no, 1), 'MMM') AS format_date,
     (
@@ -75,7 +74,7 @@ GROUP BY
 ORDER BY 
     A.month_no ASC";
 $params = array($segment, $year_no);
-}elseif($segment == '999' && $Sales == 'N' && $is_new <> 0){
+}elseif($segment == '999' && $is_new <> 0){
     switch ($is_new) {
         case 'Y':
             $is_new_array = ['01', '02', '04'];
@@ -107,7 +106,7 @@ GROUP BY
 ORDER BY 
     A.month_no ASC";
 $params = array($year_no);
-}elseif($segment == '999' && $Sales <> 'N' && $is_new == 0){
+}elseif($segment == '999' && $is_new == 0){
     $sqlrevenue_accu = "SELECT 
     FORMAT(DATEFROMPARTS(A.year_no, A.month_no, 1), 'MMM') AS format_date,
     (

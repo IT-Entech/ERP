@@ -7,35 +7,10 @@ function fetchProduct(element) {
   // Retrieve the data-segment-no from the clicked <a> element
   const segment = element.getAttribute('data-segment-no') || '999';
   const year_no = document.getElementById('year').value;
-  const level = document.getElementById('fetch-level').value;
-const staff = document.getElementById('fetch-staff').value;
 const is_new = document.getElementById('is_new').value;
 
- // Check if year_no and level are available
- if (!year_no || !level) {
-  console.error('Year or level is missing.');
-  return;
-}
-
-let url;
-if (level > 1) {
-  const channel = document.getElementById('channel') ? document.getElementById('channel').value : null;
-  const Sales = document.getElementById('Sales') ? document.getElementById('Sales').value : null;
-
-  if (!channel || !Sales) {
-      console.error('Channel or Sales is missing for higher-level users.');
-      return;
-  }
-
   url = `/ERP/reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
-} else if (level == 1) {
-  if (!staff) {
-      console.error('Staff information is missing for level 1 user.');
-      return;
-  }
 
-  url = `/ERP/reportchart.php?year_no=${year_no}&segment=${segment}&staff=${staff}&is_new=${is_new}`;
-}
 
 console.log('Fetching data from URL:', url);
 

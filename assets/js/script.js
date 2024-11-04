@@ -11,6 +11,7 @@ fetch('../header.php')
           if (level == 3) {
             document.getElementById('maintanance-nav').style.display = 'block';
             document.getElementById('permission-nav').style.display = 'block';
+            document.getElementById('select-sale').style.display = 'block';
         } else if (level >= 2) {
             document.getElementById('select-sale').style.display = 'block';
         }
@@ -25,26 +26,18 @@ fetch('../header.php')
     .catch(error => {
         console.error('Error fetching data:', error);
     });
-
 // Fetch year data and update the dashboard based on the selected values
 function fetchYear() {
     const year_no = document.getElementById('year').value;
     const month_no = document.getElementById('month').value;
     const level = document.getElementById('fetch-level').value;
     const is_new = document.getElementById('is_new').value;
-    let channel; // Declare channel outside the condition
-    let Sales; // Declare Sales outside the condition
+    const Sales = document.getElementById('Sales').value;
+    const channel = document.getElementById('channel').value;
 
-    if (level > 1) {
-        channel = document.getElementById('channel').value; // Get value of channel
-        Sales = document.getElementById('Sales').value; // Get value of Sales
-    } else if (level == 1) {
-        channel = 'N'; // Set default channel value
-        Sales = document.getElementById('fetch-staff').value; // Get value of Sales
-    }
 
     // Construct the URL for fetching the dashboard data
-    const url = `/ERP/fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
+    const url = `./fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
 
     console.log(`Level: ${level}, Channel: ${channel}, Month: ${month_no}, Year: ${year_no}, Sales: ${Sales}, is_new: ${is_new}`);
 
@@ -336,10 +329,7 @@ const percentage = params.percent.toFixed(2);
       chart.render();
     }*/
     document.addEventListener('DOMContentLoaded', fetchYear);
-    
-    const level = document.getElementById('fetch-level').value;
     document.addEventListener('DOMContentLoaded', (event) => {
-      if (level > 1) {
       fetch('/ERP/staff_id.php')
           .then(response => {
               if (!response.ok) {
@@ -357,8 +347,7 @@ const percentage = params.percent.toFixed(2);
               });
           })
           .catch(error => console.error('Error fetching data:', error));
-        }
-  });
+    });
 
   const monthSelect = document.getElementById('month');
   const monthNames = [
