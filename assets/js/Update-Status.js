@@ -1,9 +1,30 @@
+
 fetch('../header.php')
     .then(response => response.json()) // Parse the JSON response
     .then(data => {
         const { name, staff, level, role } = data;
         if (level >= '2') {
-          fetchStaffData();
+          fetch('/ERP/staff_id.php')
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+          })
+          .then(data => {
+            const selectElement = document.getElementById('sales');
+            data.forEach(item => {
+              const option = document.createElement('option');
+              option.value = item.staff_id;
+              option.textContent = item.fname_e || item.nick_name || item.staff_id;
+              selectElement.appendChild(option);
+            });
+          })
+          .catch(error => console.error('Error fetching staff data:', error));
+      }else if(level == '1'){
+        const selectElement = document.getElementById('sales');
+        const option = document.createElement('option');
+              option.value = staff;
+              option.textContent = name;
+              selectElement.appendChild(option);
       }
         if (staff === 0 || level == 0) {
             alert("Cannot enter this site");
@@ -18,13 +39,12 @@ fetch('../header.php')
             }
             // Update hidden fields and display the user name
             document.getElementById('fetch-level').value = level;
-            document.getElementById('fetch-staff').value = staff;
+            document.getElementById('staff').value = staff;
             document.getElementById('fetch-role').value = role;
             document.getElementById('name-display').textContent = name;
             document.getElementById('name-display1').textContent = name;
 
-            // Call fetchData after validation passes
-            fetchData(data);
+         
         }
     })
     .catch(error => {
@@ -32,22 +52,13 @@ fetch('../header.php')
     });
 
 function fetchData() {
-
     const year_no = document.getElementById('year').value;
     const month_no = document.getElementById('month').value;
     const tracking = document.getElementById('tracking').value;
-    const  staff = document.getElementById('fetch-staff').value;
-    const  level = document.getElementById('fetch-level').value;
+    const Sales = document.getElementById('sales').value;
 
-   let Sales;
-    if(level == 1){
-      Sales = staff;
-    }else if(level >= 2){
-      Sales = document.getElementById('sales').value;
-    }
-    const url = `./fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${tracking}&Sales=${Sales}`;
-
-    //console.log('Fetching data from URL:', url); // Log the URL to ensure it's correct
+ const url = `./fetch-CRM-Status.php?year_no=${year_no}&month_no=${month_no}&tracking=${tracking}&Sales=${Sales}`;
+    //console.log('Fetching data from URL:', url); 
 
     fetch(url)
         .then(response => {
@@ -251,6 +262,8 @@ function updateTable(data) {
     reasonInput.name = `reason${index + 1}`;
     reasonInput.value = row.reasoning ? row.reasoning : '';
     reasonInput.disabled = row.status_code != 1 && row.status_code != 2;//
+    const qt_no = row.qt_no ? row.qt_no : '';
+    const appoint_no = row.appoint_no ? row.appoint_no : '';
     const remark = row.remark ? row.remark : '';
     const date = row.appoint_date ? row.appoint_date : '';
 
@@ -269,12 +282,12 @@ function updateTable(data) {
     });
 
     tr.innerHTML = `
-      <td><a href= "forms-appoint.html?ap=${row.appoint_no}" id= "${date}" value ="${date}" >${date}</a></td>
+      <td><a href= "forms-appoint.html?ap=${appoint_no}" id= "appoint_no${index + 1}" value ="${date}" >${date}</a></td>
       <td>${row.customer_name}</td>
-      <td>${row.qt_no}</td>
+      <td><input type="text" class="form-control" id="qt_no${index + 1}" name="qt_no${index + 1}" value="${qt_no}" readonly></td>
        <td>${row.so_amount}</td>
       <td>${select1.outerHTML}</td>
-      <td><input type="text" class="form-control" id="remark${row.appoint_no}${index + 1}"name="${row.appoint_no}"value="${remark}"</td>
+      <td><input type="text" class="form-control" id="remark${index + 1}"name="remark${index + 1}"value="${remark}"</td>
       <td>${select.outerHTML}</td>
       <td>${reasonInput.outerHTML}</td>
     `;
@@ -312,29 +325,26 @@ function getBadgeClass(status1) {
 }
 
 
-
 document.addEventListener('DOMContentLoaded', fetchData);
 
+/*function fetchStaffData() {
 
-function fetchStaffData() {
   fetch('/ERP/staff_id.php')
-      .then(response => {
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(data => {
-          const selectElement = document.getElementById('sales');
-          data.forEach(item => {
-              const option = document.createElement('option');
-              option.value = item.staff_id;
-              option.textContent = item.fname_e || item.nick_name || item.staff_id;
-              selectElement.appendChild(option);
-          });
-      })
-      .catch(error => console.error('Error fetching data:', error));
-}
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      const selectElement = document.getElementById('sales');
+      data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.staff_id;
+        option.textContent = item.fname_e || item.nick_name || item.staff_id;
+        selectElement.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Error fetching staff data:', error));
+}*/
 
 
 const monthSelect = document.getElementById('month');

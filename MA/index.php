@@ -417,7 +417,7 @@ if($staff === 0 || $level <= 1){
         </a>
       </li>
       <li>
-        <a href="tables-data.php">
+        <a href="Update-Status.html">
           <i class="bi bi-circle"></i><span>Data Appoint</span>
         </a>
       </li>

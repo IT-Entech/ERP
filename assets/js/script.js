@@ -196,10 +196,10 @@ const tbody = document.querySelector('#region tbody');
       <td>${row.segment}</td>
       <td>${row.North}</td>
       <td>${row.Central}</td>
-       <td>${row.East}</td>
+      <td>${row.East}</td>
       <td>${row.North_East}</td>
       <td>${row.West}</td>
-     <td>${row.South}</td>
+      <td>${row.South}</td>
     `;
 
     tbody.appendChild(tr);
@@ -238,10 +238,9 @@ const percentage = params.percent.toFixed(2);
             return `
               <b>${params.name}</b><br>
               Product qty: ${params.value}<br>
-              Ratio: ${percentage} %<br>
+              Winrate: ${percentage} %<br>
               Value: ${formattedValue}<br>
-              AOV: ${aov}<br>
-              winrate: ${aov} %
+              AOV: ${aov}
             `;
           }
         },

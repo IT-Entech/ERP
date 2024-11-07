@@ -1,13 +1,14 @@
 <?php
-include_once('C:\xampp\htdocs\connectDB\connectDB.php');
+include_once '../../connectDB/connectDB.php';
 $objCon = connectDB();
 
-$timezone = new DateTimeZone('Asia/Bangkok'); // Setting the timezone
+$timezone = new DateTimeZone('Asia/Bangkok');
 $date = new DateTime('now', $timezone);
-$record_datetime = $date->format('Y-m-d H:i:s'); // Current date and time
+$record_datetime = $date->format('Y-m-d H:i:s');
 
 $data = $_POST;
 $sales = $data['staff'];
+//print_r($data);
 
 // Fetch the user ID associated with the staff
 $uidQuery = "SELECT usrid FROM xuser WHERE staff_id LIKE ?";
@@ -21,6 +22,8 @@ $uid = $uid['usrid'];
 $qt_no_count = count(array_filter(array_keys($data), function($key) {
     return strpos($key, 'qt_no') === 0;
 }));
+
+$hasChanges = false;
 
 // Loop over the qt_no entries
 for ($i = 1; $i <= $qt_no_count; $i++) {
@@ -88,11 +91,18 @@ for ($i = 1; $i <= $qt_no_count; $i++) {
             if ($stmt === false) {
                 die(print_r(sqlsrv_errors(), true));
             } else {
-                echo '<script>alert("อัพเดทข้อมูลแล้ว");window.location="tables-data.php";</script>';
+                $hasChanges = true;
             }
         }
     }
 }
 
+// Close the connection
 sqlsrv_close($objCon);
-?>
+
+// Provide feedback to the user
+if ($hasChanges) {
+    echo '<script>alert("อัพเดทข้อมูลแล้ว");window.location="Update-Status.html";</script>';
+} else {
+    echo '<script>alert("ไม่มีข้อมูลที่ถูกอัพเดท");window.location="Update-Status.html";</script>';
+}
