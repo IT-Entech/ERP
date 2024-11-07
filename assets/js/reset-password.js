@@ -1,18 +1,24 @@
-
-document.getElementById("login").addEventListener("submit", function(event) {
+document.getElementById("reset-password").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent the form from submitting the traditional way
 
     // Fetch the form values
     const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const newPassword = document.getElementById("new-password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
 
     // Log the values for debugging purposes
     console.log("Username: " + username);
-    console.log("Password: " + password);
+    console.log("NewPassword: " + newPassword);
+    console.log("ConfirmPassword: " + confirmPassword);
 
+    // Basic validation to check if passwords match
+    if (newPassword !== confirmPassword) {
+    alert("Passwords do not match. Please try again.");
+    return;
+    }
     // Prepare the AJAX request
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "get_login.php", true);
+    xhr.open("POST", "reset-password.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     // Handle the response
@@ -24,16 +30,7 @@ document.getElementById("login").addEventListener("submit", function(event) {
                 // Handle the response based on status
                 if (response.status === 'success') {
                     alert(response.message); // Show success message
-                    
-                    // Redirect based on user level
-                    if (response.level === 1) {
-                        window.location.href = "./";
-                    } else if (response.level > 1) {
-                        window.location.href = "./";
-                    } else {
-                        // This case shouldn't normally be hit
-                        alert("Unexpected user level. Please contact support.");
-                    }
+                    window.location.href = "./pages-login.html";
                 } else {
                     // Show error message from server
                     alert("Error: " + response.message);
@@ -47,5 +44,6 @@ document.getElementById("login").addEventListener("submit", function(event) {
 
     // Send the data to the server
     xhr.send("username=" + encodeURIComponent(username) + 
-             "&password=" + encodeURIComponent(password));
+             "&newPassword=" + encodeURIComponent(newPassword) +
+            "&confirmPassword=" + encodeURIComponent(confirmPassword));
 });

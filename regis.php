@@ -1,5 +1,5 @@
 <?php
-include_once('../connectDB/connectDB.php');
+include_once '../connectDB/connectDB.php';
 $objCon = connectDB();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
