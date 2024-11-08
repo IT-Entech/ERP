@@ -6,7 +6,7 @@ include_once '../../connectDB/connectDB.php';
 $objCon = connectDB(); // Connect to the database
 
 if ($objCon === false) {
-    die(print_r(sqlsrv_errors(), true));
+    die(json_encode(["error" => sqlsrv_errors()]));
 }
 
 $currentYear = date("Y");
