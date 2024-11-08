@@ -265,6 +265,7 @@ function updateTable(data) {
     const qt_no = row.qt_no ? row.qt_no : '';
     const appoint_no = row.appoint_no ? row.appoint_no : '';
     const remark = row.remark ? row.remark : '';
+    const reason = row.reasoning ? row.reasoning : '';
     const date = row.appoint_date ? row.appoint_date : '';
 
 
@@ -289,7 +290,7 @@ function updateTable(data) {
       <td>${select1.outerHTML}</td>
       <td><input type="text" class="form-control" id="remark${index + 1}"name="remark${index + 1}"value="${remark}"</td>
       <td>${select.outerHTML}</td>
-      <td>${reasonInput.outerHTML}</td>
+      <td><input type="text" class="form-control" id="reason${index + 1}"name="reason${index + 1}"value="${reason}"</td>
     `;
 
     tbody.appendChild(tr);
