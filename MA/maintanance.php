@@ -22,29 +22,29 @@ if ($year_no <> 0 && $month_no == 0) {
 					 /*(SELECT size_no FROM ms_container B WHERE A.container_code = B.container_code)AS size_no,
 					(SELECT number_no FROM ms_container B WHERE A.container_code = B.container_code)AS number_no,*/
 					CASE WHEN container_type_code != '00' THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS ct_amount,
-					 CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code NOT IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061','บธ 1608','ณค 3475') THEN COUNT(vehicle_code)
-					 END AS TP,
-					 CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code NOT IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061','บธ 1608','ณค 3475') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'tp_amount',
-					  CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061') THEN COUNT(vehicle_code)
-					 END AS OC,
-					 CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'oc_amount',
-					  CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('บธ 1608','ณค 3475') THEN COUNT(vehicle_code)
-					 END AS CL,			 
-              			CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('บธ 1608','ณค 3475') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'cl_amount'
-              		  FROM repair_head A
-					  LEFT JOIN ms_repair_type msr ON A.repair_type_code = msr.repair_type_code
-              		  LEFT JOIN (
-              			SELECT A.repair_no, SUM(B.total_amount) AS stock_amount
-              			FROM brw_head A
-              			LEFT JOIN brw_detail B ON A.brw_no = B.brw_no
-              			WHERE A.is_status <> 'C' AND A.stock_code IN ('02', '06')
-              			GROUP BY A.repair_no
-              		  ) brw_summary ON A.repair_no = brw_summary.repair_no
-              		  WHERE A.is_status <> 'C' 
-              		  AND YEAR(A.repair_date) = ?
-              		  GROUP BY A.vehicle_code,container_type_code,container_code
-				  		)
-		SELECT  
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code NOT IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061','บธ 1608','ณค 3475') THEN COUNT(vehicle_code)
+					END AS TP,
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code NOT IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061','บธ 1608','ณค 3475') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'tp_amount',
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061') THEN COUNT(vehicle_code)
+					END AS OC,
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'oc_amount',
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('บธ 1608','ณค 3475') THEN COUNT(vehicle_code)
+					END AS CL,			 
+              		CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('บธ 1608','ณค 3475') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'cl_amount'
+              		FROM repair_head A
+					LEFT JOIN ms_repair_type msr ON A.repair_type_code = msr.repair_type_code
+              		LEFT JOIN (
+              		SELECT A.repair_no, SUM(B.total_amount) AS stock_amount
+              		FROM brw_head A
+              		LEFT JOIN brw_detail B ON A.brw_no = B.brw_no
+              		WHERE A.is_status <> 'C' AND A.stock_code IN ('02', '06')
+              		GROUP BY A.repair_no
+              		 ) brw_summary ON A.repair_no = brw_summary.repair_no
+              		 WHERE A.is_status <> 'C' 
+              		 AND YEAR(A.repair_date) = ?
+              		 GROUP BY A.vehicle_code,container_type_code,container_code
+					)
+		SELECT 
 		SUM(CT) AS CT,
 		SUM(ct_amount) AS ct_amount,
 		SUM(TP) AS TP,
@@ -80,14 +80,14 @@ if ($year_no <> 0 && $month_no == 0) {
               	  GROUP BY 
               	  FORMAT(A.repair_date, 'yyyy-MM')";  
     $sqlgraphpie = " WITH MA AS(
-SELECT 
-              	CASE WHEN A.repair_type_code = '000' THEN 'Container'
-		WHEN A.repair_type_code != '000' THEN msr.repair_type_name
-		END AS repair_name,
+					SELECT 
+              		CASE WHEN A.repair_type_code = '000' THEN 'Container'
+					WHEN A.repair_type_code != '000' THEN msr.repair_type_name
+					END AS repair_name,
               		SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0)) AS total_amount
-              	  FROM repair_head A
-				  LEFT JOIN ms_repair_type msr ON A.repair_type_code = msr.repair_type_code
-              	  LEFT JOIN (
+              	 	FROM repair_head A
+				  	LEFT JOIN ms_repair_type msr ON A.repair_type_code = msr.repair_type_code
+              	  	LEFT JOIN (
               		SELECT A.repair_no, SUM(B.total_amount) AS stock_amount
               		FROM brw_head A
               		LEFT JOIN brw_detail B ON A.brw_no = B.brw_no
@@ -98,8 +98,8 @@ SELECT
               	  AND YEAR(A.repair_date) = ?
               	  GROUP BY A.repair_type_code, msr.repair_type_name
 				  	)
-	        SELECT  * FROM MA
-		ORDER BY total_amount DESC";        
+	        	SELECT  * FROM MA
+				ORDER BY total_amount DESC";        
     $params = array($year_no);
 }else{
                 $sqlbox = "		 WITH MA AS(
@@ -109,27 +109,27 @@ SELECT
 					 /*(SELECT size_no FROM ms_container B WHERE A.container_code = B.container_code)AS size_no,
 					(SELECT number_no FROM ms_container B WHERE A.container_code = B.container_code)AS number_no,*/
 					CASE WHEN container_type_code != '00' THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS ct_amount,
-					 CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code NOT IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061','บธ 1608','ณค 3475') THEN COUNT(vehicle_code)
-					 END AS TP,
-					 CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code NOT IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061','บธ 1608','ณค 3475') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'tp_amount',
-					  CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061') THEN COUNT(vehicle_code)
-					 END AS OC,
-					 CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'oc_amount',
-					  CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('บธ 1608','ณค 3475') THEN COUNT(vehicle_code)
-					 END AS CL,			 
-              			CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('บธ 1608','ณค 3475') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'cl_amount'
-              		  FROM repair_head A
-					  LEFT JOIN ms_repair_type msr ON A.repair_type_code = msr.repair_type_code
-              		  LEFT JOIN (
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code NOT IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061','บธ 1608','ณค 3475') THEN COUNT(vehicle_code)
+					END AS TP,
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code NOT IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061','บธ 1608','ณค 3475') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'tp_amount',
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061') THEN COUNT(vehicle_code)
+					END AS OC,
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('ญฐ3356','ฆฒ 8571','ฌถ-7644','ณย 9130','ฌถ 9061') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'oc_amount',
+					CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('บธ 1608','ณค 3475') THEN COUNT(vehicle_code)
+					END AS CL,			 
+              		CASE WHEN container_type_code = '00' AND vehicle_code IS NOT NULL AND vehicle_code IN ('บธ 1608','ณค 3475') THEN SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0))END  AS 'cl_amount'
+              		FROM repair_head A
+					LEFT JOIN ms_repair_type msr ON A.repair_type_code = msr.repair_type_code
+              		LEFT JOIN (
               			SELECT A.repair_no, SUM(B.total_amount) AS stock_amount
               			FROM brw_head A
               			LEFT JOIN brw_detail B ON A.brw_no = B.brw_no
               			WHERE A.is_status <> 'C' AND A.stock_code IN ('02', '06')
               			GROUP BY A.repair_no
               		  ) brw_summary ON A.repair_no = brw_summary.repair_no
-              		  WHERE A.is_status <> 'C' 
-              		  AND YEAR(A.repair_date) = ? AND MONTH(A.repair_date) = ?
-              		  GROUP BY A.vehicle_code,container_type_code,container_code
+              		WHERE A.is_status <> 'C' 
+              		AND YEAR(A.repair_date) = ? AND MONTH(A.repair_date) = ?
+              		GROUP BY A.vehicle_code,container_type_code,container_code
 				  		)
 		SELECT  
 		SUM(CT) AS CT,
@@ -190,31 +190,31 @@ SELECT
 		ORDER BY total_amount DESC";  
     $params = array($year_no, $month_no);
 }
-$sqlgraph = "SELECT 
-    FORMAT(A.repair_date, 'MMM') AS format_date, 
-    MONTH(A.repair_date) AS month_number,
-    SUM(CASE 
-        WHEN A.repair_type_code NOT IN ('001', '002') AND A.vehicle_code IS NOT NULL 
-        THEN COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0)
-        ELSE 0 
-    END) AS total_amount1,
-    SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0)) AS total_amount,
-    '160000.0000' AS target_ma
-FROM repair_head A
-LEFT JOIN (
-    SELECT A.repair_no, SUM(B.total_amount) AS stock_amount
-    FROM brw_head A
-    LEFT JOIN brw_detail B ON A.brw_no = B.brw_no
-    WHERE A.is_status <> 'C' AND A.stock_code IN ('02', '06')
-    GROUP BY A.repair_no
-) brw_summary ON A.repair_no = brw_summary.repair_no
-WHERE A.is_status <> 'C' 
-AND YEAR(A.repair_date) = 2024 
-GROUP BY 
-    FORMAT(A.repair_date, 'MMM'), 
-    MONTH(A.repair_date)
-ORDER BY 
-    month_number"; 
+$sqlgraph = 	"SELECT 
+			    FORMAT(A.repair_date, 'MMM') AS format_date, 
+			    MONTH(A.repair_date) AS month_number,
+			    SUM(CASE 
+			        WHEN A.repair_type_code NOT IN ('001', '002') AND A.vehicle_code IS NOT NULL 
+			        THEN COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0)
+			        ELSE 0 
+			    END) AS total_amount1,
+			    SUM(COALESCE(A.total_before_vat, 0) + COALESCE(brw_summary.stock_amount, 0)) AS total_amount,
+			    '160000.0000' AS target_ma
+				FROM repair_head A
+				LEFT JOIN (
+			    SELECT A.repair_no, SUM(B.total_amount) AS stock_amount
+			    FROM brw_head A
+			    LEFT JOIN brw_detail B ON A.brw_no = B.brw_no
+			    WHERE A.is_status <> 'C' AND A.stock_code IN ('02', '06')
+			    GROUP BY A.repair_no
+				) brw_summary ON A.repair_no = brw_summary.repair_no
+				WHERE A.is_status <> 'C' 
+				AND YEAR(A.repair_date) = 2024 
+				GROUP BY 
+			    FORMAT(A.repair_date, 'MMM'), 
+			    MONTH(A.repair_date)
+				ORDER BY 
+			    month_number"; 
 // Execute the first query
 $stmt = sqlsrv_query($objCon, $sqlbox, $params);
 if ($stmt === false) {
