@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <!--meta http-equiv="refresh" content="300"-->
-  <title>Dashboard - CRM</title>
+  <title>Landing Page</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -309,23 +309,24 @@ h2 {
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#dashboards-nav" data-bs-toggle="collapse" href="#">
+        <a class="nav-link collapsed" data-bs-target="#dashboards-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="dashboards-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
+          <li>
             <a href="../ERP/CRM/">
               <i class="bi bi-circle"></i><span>CRM</span>
             </a>
           </li>
-          <li id="maintanance-nav" style="display:none">
+          <li id="maintanance-nav" class="d-none">
             <a href="../ERP/MA/">
-              <i class="bi bi-circle"></i><span>Maintanance</span>
+              <i class="bi bi-circle"></i><span>Maintenance</span>
             </a>
           </li>
         </ul>
       </li>
+      
 
       <!--li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
@@ -416,7 +417,7 @@ h2 {
             </a>
           </li-->
           <li>
-            <a href="forms-appoint.html">
+            <a href="./CRM/forms-appoint.html">
               <i class="bi bi-circle"></i><span>บันทึกข้อมูลลูกค้า</span>
             </a>
           </li>
@@ -453,6 +454,29 @@ h2 {
               <i class="bi bi-circle"></i><span>Data Cost sheet</span>
             </a>
           </li-->
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-calendar-check"></i><span>Booking</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="booking-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <!--li>
+            <a href="tables-general.html">
+              <i class="bi bi-circle"></i><span>General Tables</span>
+            </a>  
+          </li-->
+          <li>
+            <a href="CRM/Update-Status.html">
+              <i class="bi bi-circle"></i><span>จองรถขนส่ง</span>
+            </a>
+          </li>
+          <li>
+            <a href="tables-CS.html">
+              <i class="bi bi-circle"></i><span>จองรถส่วนกลาง</span>
+            </a>
+          </li>
         </ul>
       </li>
 
@@ -510,7 +534,7 @@ h2 {
           <span>Profile</span>
         </a>
       </li>
-      <li  id="permission-nav" style="display:block" class="nav-item">
+      <li  id="permission-nav"  class="nav-item d-none">
         <a class="nav-link collapsed" href="./permission/">
           <i class="bi bi-question-circle"></i>
           <span>Permission</span>
@@ -651,34 +675,6 @@ h2 {
     setBgGreet();
     getName();
   </script>
-  <script>
-    fetch('./header.php')
-             .then(response => response.json()) // Parse the JSON response
-             .then(data => {
-                 // Access the data
-                 const { name, staff, level, role } = data;
-   
-                 // Check conditions based on fetched data
-                 if (staff === 0 || level == 0) {
-                     alert("Can not enter this site");
-                     window.location.href = "../pages-login.html"; // Redirect to login
-                 } else {
-                   if (level == 3 || role == 'OPL') {
-               // Show the permission nav item
-               document.getElementById('maintanance-nav').style.display = 'block';
-           }else if(level < 3){
-             document.getElementById('permission-nav').style.display = 'none';
-           }
-                     document.getElementById('name-display').textContent = name;
-                     document.getElementById('name-display1').textContent = name;
-                     console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
-                     // Continue with other logic if necessary
-                 }
-             })
-             .catch(error => {
-                 console.error('Error fetching data:', error);
-             });
-   </script>
 </main>
 
 
@@ -698,6 +694,7 @@ h2 {
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/fetech-from-login.js"></script>
 </body>
 
 </html>

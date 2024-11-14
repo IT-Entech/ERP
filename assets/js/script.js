@@ -1,31 +1,57 @@
-fetch('../header.php')
-    .then(response => response.json()) // Parse the JSON response
+function toggleMaintenanceNav(isVisible) {
+  var maintenanceNav = document.getElementById('maintanance-nav');
+  var permissionNav = document.getElementById('permission-nav');
+  var selectSale = document.getElementById('select-sale');
+  if (isVisible) {
+    maintenanceNav.classList.remove('d-none'); // Show the item
+    permissionNav.classList.remove('d-none');
+    selectSale.classList.remove('d-none');
+  } else {
+    maintenanceNav.classList.add('d-none');    // Hide the item
+    permissionNav.classList.add('d-none');
+    selectSale.classList.add('d-none');
+  }
+}
+// Function to fetch session data from header.php
+function getSessionData() {
+  fetch('../header.php')
+    .then(response => response.json()) // Parse the JSON from the response
     .then(data => {
-        const { name, staff, level, role } = data;
+      console.log('Session Data:', data);
 
-        if (staff === 0 || level == 0) {
-            alert("Cannot enter this site");
-            window.location.href = "../pages-login.html"; // Redirect to login
-        } else {
-          
-          if (level == 3) {
-            document.getElementById('maintanance-nav').style.display = 'block';
-            document.getElementById('permission-nav').style.display = 'block';
-            document.getElementById('select-sale').style.display = 'block';
-        } else if (level >= 2) {
-            document.getElementById('select-sale').style.display = 'block';
-        }
-            // Update hidden fields and display the user name
-            document.getElementById('fetch-level').value = level;
-            document.getElementById('fetch-staff').value = staff;
-            document.getElementById('name-display').textContent = name;
-            document.getElementById('name-display1').textContent = name;
-            console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
-        }
+      const { name, staff, level, role } = data;
+      console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
+
+      // Conditionally show Maintenance and Permission nav items
+      if (level == 2 || level == 3) {
+        toggleMaintenanceNav(true);
+
+        fetch('/ERP/staff_id.php')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            const selectElement = document.getElementById('Sales');
+            data.forEach(item => {
+              const option = document.createElement('option');
+              option.value = item.staff_id;
+              option.textContent = item.fname_e || item.nick_name || item.staff_id; 
+              selectElement.appendChild(option);
+            });
+          })
+          .catch(error => console.error('Error fetching staff data:', error));
+      }
     })
     .catch(error => {
-        console.error('Error fetching data:', error);
+      console.error('Error fetching session data:', error);
     });
+}
+
+// Call the function to fetch session data
+getSessionData();
 // Fetch year data and update the dashboard based on the selected values
 function fetchYear() {
     const year_no = document.getElementById('year').value;
@@ -328,25 +354,7 @@ const percentage = params.percent.toFixed(2);
       chart.render();
     }*/
     document.addEventListener('DOMContentLoaded', fetchYear);
-    document.addEventListener('DOMContentLoaded', (event) => {
-      fetch('/ERP/staff_id.php')
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error(`HTTP error! Status: ${response.status}`);
-              }
-              return response.json();
-          })
-          .then(data => {
-              const selectElement = document.getElementById('Sales');
-              data.forEach(item => {
-                  const option = document.createElement('option');
-                  option.value = item.staff_id;
-                  option.textContent = item.fname_e || item.nick_name || item.staff_id; 
-                  selectElement.appendChild(option);
-              });
-          })
-          .catch(error => console.error('Error fetching data:', error));
-    });
+
 
   const monthSelect = document.getElementById('month');
   const monthNames = [
