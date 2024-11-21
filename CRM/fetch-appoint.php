@@ -18,25 +18,31 @@ $month_no = isset($_GET['month_no']) ? $_GET['month_no'] : $currentMonth;
 
 if($year_no <> 0 && $month_no <> 0 && $Sales == 'N'){
     $sqlappoint = "SELECT 
-                    FORMAT(appoint_date, 'yyyy-MM-dd') AS format_date,
-					customer_name,
-					CASE WHEN qt_no IS NULL AND is_status <> 4 THEN appoint_no END AS appoint_no
+                    FORMAT(A.appoint_date, 'yyyy-MM-dd') AS format_date,
+					A.customer_name,
+					CASE WHEN A.qt_no IS NULL AND A.is_status <> 4 THEN A.appoint_no END AS appoint_no
                     FROM 
-                    appoint_head
+                    appoint_head A
+                    LEFT JOIN 
+                    cost_sheet_head B ON A.appoint_no = B.appoint_no
                     WHERE 
-                     qt_no IS NULL AND is_status <> 4 AND month_no = ? AND year_no = ?
+                     B.appoint_no IS NULL 
+                     AND A.is_status <> 4 AND month_no = ? AND year_no = ?
                     ORDER BY 
                     format_date DESC, appoint_no DESC";
                    $params = array($month_no, $year_no);
 }else{
     $sqlappoint = "SELECT 
-                    FORMAT(appoint_date, 'yyyy-MM-dd') AS format_date,
-					customer_name,
-					CASE WHEN qt_no IS NULL AND is_status <> 4 THEN appoint_no END AS appoint_no
+                    FORMAT(A.appoint_date, 'yyyy-MM-dd') AS format_date,
+					A.customer_name,
+					CASE WHEN A.qt_no IS NULL AND A.is_status <> 4 THEN A.appoint_no END AS appoint_no
                     FROM 
-                    appoint_head
+                    appoint_head A
+                    LEFT JOIN 
+                    cost_sheet_head B ON A.appoint_no = B.appoint_no
                     WHERE 
-                     qt_no IS NULL AND is_status <> 4 AND month_no = ? AND year_no = ? AND staff_id = ?
+                     B.appoint_no IS NULL 
+                     AND A.is_status <> 4 AND month_no = ? AND year_no = ? AND A.staff_id = ?
                     ORDER BY 
                     format_date DESC, appoint_no DESC";
 
