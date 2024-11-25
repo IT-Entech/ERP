@@ -16,7 +16,7 @@ function toggleMaintenanceNav(isVisible) {
           .then(data => {
             //console.log('Session Data:', data);
       
-            const { name, staff, level, role } = data;
+            const { name, staff, level, role, position } = data;
             //console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
             if (staff == 0 || level == 0) {
                 alert("Can not enter this site");
@@ -31,6 +31,7 @@ function toggleMaintenanceNav(isVisible) {
              //document.getElementById('fetch-staff').value = staff;
              document.getElementById('name-display').textContent = name;
              document.getElementById('name-display1').textContent = name;
+             document.getElementById('position-name').textContent = position;
           })
           .catch(error => {
             console.error('Error fetching session data:', error);

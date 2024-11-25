@@ -8,6 +8,7 @@ function fetchHead()
         "staff"    => $_SESSION["staff_id"] ?? "0",
         "level"    => $_SESSION["level"] ?? "0",
         "role"     => $_SESSION["role"] ?? "Unknown",
+        "position"     => $_SESSION["position"] ?? "Unknown",
     ];
 
     // Return the JSON response

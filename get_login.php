@@ -26,14 +26,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($objResult && password_verify($password, $objResult["password"])) {
         // Password is correct
         $name = $objResult["Name"];
+        $username = $objResult["username"];
         $id = $objResult["staff_id"];
         $level = $objResult["level"];
         $role = $objResult["Role"];
         $_SESSION["name"] = $name;
+        $_SESSION["Username"] = $username;
         $_SESSION["staff_id"] = $id;
         $_SESSION["level"] = $level;
         $_SESSION["role"] = $role;
 
+        // Update the user's last login time
+        $SQL = "SELECT b.position_name FROM hr_staff a
+        LEFT JOIN ms_position b ON a.position_code = b.position_code
+        WHERE staff_id = ?";
+        $param = [$id];
+        $Query = sqlsrv_query($objCon, $SQL, $param);
+        $Result = sqlsrv_fetch_array($Query, SQLSRV_FETCH_ASSOC);
+        $position = $Result["position_name"];
+        $_SESSION["position"] = $position;
         // Update the user's last login time
         $strSQL = "UPDATE a_user SET update_time = ? WHERE staff_id = ?";
         $param = [$timestamp, $id];

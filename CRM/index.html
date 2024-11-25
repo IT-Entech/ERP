@@ -217,7 +217,7 @@
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
              <li class="dropdown-header">
               <h6 id="name-display1"></h6>
-              <span>Web Designer</span>
+              <span id="position-name"></span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -284,7 +284,7 @@
               <i class="bi bi-circle"></i><span>CRM</span>
             </a>
           </li>
-          <li id="maintanance-nav d-none">
+          <li id="maintanance-nav" class="d-none">
             <a href="../../ERP/MA/">
               <i class="bi bi-circle"></i><span>Maintanance</span>
             </a>
@@ -531,14 +531,14 @@
         </ol>
         
       </nav>
-      <input type="hidden" id="fetch-level" value="" onchange="fetchYear()">
-      <input type="hidden" id="fetch-staff" value="" onchange="fetchYear()">
+      <input type="hidden" id="fetch-level" value="" readonly>
+      <input type="hidden" id="fetch-staff" value="" readonly>
       <div class="col-lg-12">
         <div class="row">
           <div class="col-xxl-2 col-md-4 d-none" id="select-sale">
             <div class="form-floating mb-3">
                 <select class="form-select" id="Sales" aria-label="Sales" onchange="fetchYear()">
-                    <option selected value="N">All</option>
+                  <option value="N">All</option>
                 </select>
                 <label for="Sales">Sales</label>
             </div>
@@ -736,8 +736,16 @@
 
   </div>
 </div><!-- End Revenue Card -->
+<div class="col-12">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Stacked Bar Chart</h5>
+      <canvas id="stakedBarChart" style="max-height: 400px;"></canvas>
+    </div>
+  </div>
+</div>
  <!-- Reports -->
- <div class="col-12">
+ <!--div class="col-12">
               <div class="card">
 
                 <div class="filter">
@@ -747,38 +755,38 @@
                       <h6>Product</h6>
                     </li>
                     <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="999" onclick="fetchProduct(this)" >All</a>
+                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="999" onchange="fetchYear()" >All</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="00" onclick="fetchProduct(this)">N/A</a>
+                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="00" onchange="fetchYear()">N/A</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="01" onclick="fetchProduct(this)">กากตะกอน-ฝุ่นทราย</a>
+                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="01" onchange="fetchYear()">กากตะกอน-ฝุ่นทราย</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="02" onclick="fetchProduct(this)">Product off spec</a>
+                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="02" onchange="fetchYear()">Product off spec</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="03" onclick="fetchProduct(this)">ขยะอันตราย</a>
+                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="03" onchange="fetchYear()">ขยะอันตราย</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="04" onclick="fetchProduct(this)">Cleanning</a>
+                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="04" onchange="fetchYear()">Cleanning</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="05" onclick="fetchProduct(this)">Cleaning + กำจัด</a>
+                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="05" onchange="fetchYear()">Cleaning + กำจัด</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="99" onclick="fetchProduct(this)">อื่น ๆ</a>
+                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="99" onchange="fetchYear()">อื่น ๆ</a>
                   </li>
                   </ul>
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title">Revenue Movement <!--span>|Today</span--></h5>
+                  <h5 class="card-title">Revenue Movement <pan>|Today</span></h5>
                   <div id="reportsChart"></div>
                 </div>
 
               </div>
-            </div><!-- End Reports -->
+            </div--><!-- End Reports -->
  <!-- Recent Sales -->
  <div class="col-12">
   <div class="card recent-sales overflow-auto">
@@ -977,7 +985,7 @@
   <!-- Template Main JS File -->
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/script.js"></script>
-  <script src="../assets/js/report.js"></script>
+  <!--script src="../assets/js/report.js"></script-->
 </body>
 
 </html>

@@ -7,9 +7,11 @@ function fetchProduct(element) {
   // Retrieve the data-segment-no from the clicked <a> element
   const segment = element.getAttribute('data-segment-no') || '999';
   const year_no = document.getElementById('year').value;
-const is_new = document.getElementById('is_new').value;
+  const is_new = document.getElementById('is_new').value;
+  const Sales = document.getElementById('Sales').value;
+  const channel = document.getElementById('channel').value;
 
-  url = `/ERP/reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
+  url = `./reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
 
 
 console.log('Fetching data from URL:', url);

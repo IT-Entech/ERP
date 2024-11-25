@@ -60,15 +60,20 @@ $sqlappoint = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
+           LEFT JOIN 
+          cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
-          is_status <> 'C' 
+          A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           GROUP BY 
           MONTH(A.shipment_date)
@@ -159,15 +164,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
+           LEFT JOIN 
+          cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
-          is_status <> 'C' 
+          A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND MONTH(A.shipment_date) = ? 
           GROUP BY 
@@ -257,17 +267,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND C.sales_channels_group_code = ? 
           GROUP BY 
@@ -357,17 +370,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND C.staff_id = ? 
           GROUP BY 
@@ -456,17 +472,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND C.is_new = ? 
           GROUP BY 
@@ -558,17 +577,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND MONTH(A.shipment_date) = ? 
           AND C.sales_channels_group_code = ? 
@@ -664,17 +686,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND MONTH(A.shipment_date) = ? 
           AND C.staff_id = ? 
@@ -769,17 +794,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND MONTH(A.shipment_date) = ? 
           AND C.is_new = ? 
@@ -875,17 +903,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND C.sales_channels_group_code = ? 
           AND C.staff_id = ?
@@ -980,17 +1011,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND C.sales_channels_group_code = ? 
           AND C.is_new = ?
@@ -1085,17 +1119,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND C.staff_id = ? 
           AND C.is_new = ?
@@ -1193,17 +1230,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND MONTH(A.shipment_date) = ? 
           AND C.sales_channels_group_code = ? 
@@ -1304,17 +1344,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND MONTH(A.shipment_date) = ? 
           AND C.sales_channels_group_code = ? 
@@ -1415,17 +1458,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND MONTH(A.shipment_date) = ? 
           AND staff_id = ? 
@@ -1526,17 +1572,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND C.sales_channels_group_code = ? 
           AND staff_id = ?
@@ -1639,17 +1688,20 @@ $sqlcostsheet = "SELECT
 // Order query
 $sqlorder = "SELECT 
           MONTH(A.shipment_date) AS month_no,
-          SUM(total_before_discount) AS order_amount,
-          COUNT(A.order_no) AS order_no
+          SUM(A.total_before_vat) AS order_amount,
+           COUNT(A.order_no) AS order_no
           FROM 
           order_head A
           LEFT JOIN 
           so_detail B ON A.order_no = B.order_no
-          LEFT JOIN 
+           LEFT JOIN 
           cost_sheet_head C ON A.qt_no = C.qt_no
+          LEFT JOIN 
+          plan_head D ON A.order_no = D.order_no
           WHERE 
           A.is_status <> 'C' 
           AND B.so_no IS NULL
+          AND D.order_no IS NULL
           AND YEAR(A.shipment_date) = ? 
           AND MONTH(A.shipment_date) = ? 
           AND C.sales_channels_group_code = ? 

@@ -24,7 +24,7 @@ if ($objCon === false) {
 $usrid_default = ['16387'];
 
 // Use match to assign additional usrid based on level and role
-$usrid = array_merge($usrid_default, match (true) {
+$usrid = array_merge($usrid_default, match (false) {
     $level == '3' => ['36', '42', '47', '50', '79', '80', '96', '97', '101', 
                     '104', '105', '107', '110', '112', '115', '122', '124', '125', '126', 
                     '127', '128', '129', '131', '132', '133', '135', '140', '150'],
@@ -55,7 +55,7 @@ $sql = "SELECT A.staff_id, B.fname_e, B.nick_name
         LEFT JOIN hr_staff B ON A.staff_id = B.staff_id
         WHERE gid = '16387' 
           AND usrid NOT IN ($placeholders)
-          AND isactive = 'Y' 
+          AND A.isactive = 'Y' 
           AND A.staff_id <> ''";
 
 $stmt1 = sqlsrv_query($objCon, $sql, $usrid);
