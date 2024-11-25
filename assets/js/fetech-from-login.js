@@ -19,8 +19,9 @@ function toggleMaintenanceNav(isVisible) {
             const { name, staff, level, role, position } = data;
             //console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
             if (staff == 0 || level == 0) {
-                alert("Can not enter this site");
-                window.location.href = "../pages-login.html"; // Redirect to login
+                alert("Cannot enter this site.");
+                window.location.href = "pages-login.html";
+                return; // Redirect to login
             }
             // Conditionally show Maintenance and Permission nav items
             if (level == 2 || level == 3) {

@@ -8,7 +8,7 @@ function getSessionData() {
       const { name, staff, level, role, position } = data;
       if (staff == 0 || level <= 1) {
         alert("Cannot enter this site.");
-        window.location = "/pages-login.html";
+        window.location = "../pages-login.html";
         return;
       }
       // Conditionally show Maintenance and Permission nav items
@@ -303,7 +303,7 @@ const percentage = params.percent.toFixed(2);
         }]
       });
     }
-    let chart;
+
     function updateReport(data1) {
       const segment01 = data1.graphData.map(item => item.product_so);
       const segment02 = data1.graphData.map(item => item.product_so2);
@@ -313,8 +313,10 @@ const percentage = params.percent.toFixed(2);
       const target_revenue = data1.graphData.map(item => item.accumulated_target);
       const saleorderAccu = data1.graphData.map(item => parseFloat(item.accumulated_so).toFixed(0));
       const dateAP = data1.graphData.map(item => item.format_date);
-    
-      new Chart(document.querySelector('#stakedBarChart'), {
+      if (chartInstance !== null) {
+        chartInstance.destroy();
+    }
+      chartInstance =  new Chart(document.querySelector('#stakedBarChart'), {
         type: 'bar',
         data: {
           labels: dateAP,
