@@ -313,9 +313,7 @@ const percentage = params.percent.toFixed(2);
       const target_revenue = data1.graphData.map(item => item.accumulated_target);
       const saleorderAccu = data1.graphData.map(item => parseFloat(item.accumulated_so).toFixed(0));
       const dateAP = data1.graphData.map(item => item.format_date);
-      if (chartInstance !== null) {
-        chartInstance.destroy();
-    }
+   
       chartInstance =  new Chart(document.querySelector('#stakedBarChart'), {
         type: 'bar',
         data: {
