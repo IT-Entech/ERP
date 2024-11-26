@@ -88,7 +88,7 @@ function fetchYear() {
   const url = `./fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
   const url1 = `./reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
   
-  console.log('Fetching data from URL:', url1);
+  //console.log('Fetching data from URL:', url1);
 
   // Fetch dashboard data
   fetch(url)
@@ -99,7 +99,7 @@ function fetchYear() {
       return response.json();
     })
     .then(data => {
-      console.log('Dashboard Data:', data);  // Log the data to check the response
+      //console.log('Dashboard Data:', data);  // Log the data to check the response
       updateTable(data);  // Function to update the table with dashboard data
       updateChart(data.segmentData); // Function to update the chart with segment data from dashboard
     })
@@ -114,7 +114,7 @@ function fetchYear() {
       return response.json();
     })
     .then(data1 => {
-      console.log('Report Chart Data:', data1);  // Log the data to check the response
+      //console.log('Report Chart Data:', data1);  // Log the data to check the response
       updateReport(data1);
     })
     .catch(error => console.error('Error fetching report chart data:', error));
