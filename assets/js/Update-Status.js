@@ -68,7 +68,7 @@ function fetchData() {
             return response.json(); // Expecting JSON response
         })
         .then(data => {
-            console.log('Fetched Data:', data); // Log the data to check if it's correct
+            //console.log('Fetched Data:', data); // Log the data to check if it's correct
             updateTable(data); // Ensure updateTable is defined and works correctly
         })
         .catch(error => console.error('Error fetching data:', error));

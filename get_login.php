@@ -30,12 +30,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $objResult["staff_id"];
         $level = $objResult["level"];
         $role = $objResult["Role"];
+
         $_SESSION["name"] = $name;
         $_SESSION["Username"] = $username;
         $_SESSION["staff_id"] = $id;
         $_SESSION["level"] = $level;
         $_SESSION["role"] = $role;
 
+                // Increment runno
+        $runno = $objResult["runno"];
+        $updaterunno = $runno + 1;
         // Update the user's last login time
         $SQL = "SELECT b.position_name FROM hr_staff a
         LEFT JOIN ms_position b ON a.position_code = b.position_code
@@ -46,8 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $position = $Result["position_name"];
         $_SESSION["position"] = $position;
         // Update the user's last login time
-        $strSQL = "UPDATE a_user SET update_time = ? WHERE staff_id = ?";
-        $param = [$timestamp, $id];
+        $strSQL = "UPDATE a_user SET update_time = ?,
+        runno = ?
+         WHERE staff_id = ?";
+        $param = [$timestamp, $updaterunno, $id];
         $objQuery = sqlsrv_query($objCon, $strSQL, $param);
         
         if ($objQuery === false) {
