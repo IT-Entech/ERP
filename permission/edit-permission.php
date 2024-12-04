@@ -16,7 +16,7 @@ $record_datetime = $date->format('Y-m-d H:i:s'); // For date and time in YYYY-MM
 
 $data = $_POST;
 
-print_r($data);
+//print_r($data);
 $id_no_count = count(array_filter(array_keys($data), function($key) {
     return strpos($key, 'id') === 0;
 }));

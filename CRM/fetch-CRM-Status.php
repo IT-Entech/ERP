@@ -464,17 +464,19 @@ $sqlrevenue = "SELECT
      ORDER BY 
      format_date ASC";
 $sqlap = "SELECT 
-     FORMAT(appoint_date, 'yyyy-MM') AS format_date,
-     COUNT(CASE WHEN qt_no IS NULL AND is_status <> 4 THEN appoint_no END) AS appoint_no,
-     COUNT(CASE WHEN qt_no IS NULL AND is_status = 4 THEN appoint_no END) AS specific_appoint_no
+     FORMAT(A.appoint_date, 'yyyy-MM') AS format_date,
+     COUNT(CASE WHEN A.qt_no IS NULL AND A.is_status <> 4 THEN A.appoint_no END) AS appoint_no,
+     COUNT(CASE WHEN A.qt_no IS NULL AND A.is_status = 4 THEN A.appoint_no END) AS specific_appoint_no
      FROM 
-     appoint_head
+     appoint_head A
+      LEFT JOIN 
+    cost_sheet_head B ON A.appoint_no = B.appoint_no
      WHERE 
-     qt_no IS NULL
-     AND year_no = $year_no 
-     AND staff_id = $Sales
+      B.appoint_no IS NULL 
+     AND year_no = $year_no
+     AND A.staff_id = $Sales
      GROUP BY 
-     FORMAT(appoint_date, 'yyyy-MM')
+     FORMAT(A.appoint_date, 'yyyy-MM')
      ORDER BY 
      format_date ASC";
 $sqlcostsheet = "SELECT 
@@ -550,18 +552,20 @@ $sqlrevenue = "SELECT
     ORDER BY format_date ASC;
 ";
 $sqlap = "SELECT 
-     FORMAT(appoint_date, 'yyyy-MM') AS format_date,
-     COUNT(CASE WHEN qt_no IS NULL AND is_status <> 4 THEN appoint_no END) AS appoint_no,
-     COUNT(CASE WHEN qt_no IS NULL AND is_status = 4 THEN appoint_no END) AS specific_appoint_no
+     FORMAT(A.appoint_date, 'yyyy-MM') AS format_date,
+     COUNT(CASE WHEN A.qt_no IS NULL AND A.is_status <> 4 THEN A.appoint_no END) AS appoint_no,
+     COUNT(CASE WHEN A.qt_no IS NULL AND A.is_status = 4 THEN A.appoint_no END) AS specific_appoint_no
      FROM 
-     appoint_head
+     appoint_head A
+      LEFT JOIN 
+    cost_sheet_head B ON A.appoint_no = B.appoint_no
      WHERE 
-     qt_no IS NULL
-     AND year_no = $year_no 
+      B.appoint_no IS NULL 
+     AND year_no = $year_no
      AND month_no = $month_no
-     AND staff_id = $Sales
+     AND A.staff_id = $Sales
      GROUP BY 
-     FORMAT(appoint_date, 'yyyy-MM')
+     FORMAT(A.appoint_date, 'yyyy-MM')
      ORDER BY 
      format_date ASC";
 $sqlcostsheet = "SELECT 

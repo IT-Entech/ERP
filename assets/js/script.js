@@ -1,4 +1,15 @@
-// Function to fetch session data from header.php
+function toggleMaintenanceNav(isVisible) {
+  var selectSale = document.getElementById('select-sale');
+  if (isVisible) {
+     // Show the item
+    
+    selectSale.classList.remove('d-none');
+  } else {
+      // Hide the item
+
+    selectSale.classList.add('d-none');
+  }
+}
 function getSessionData() {
   fetch('../header.php')
     .then(response => response.json()) // Parse the JSON from the response
@@ -6,17 +17,48 @@ function getSessionData() {
       //console.log('Session Data:', data);
 
       const { name, staff, level, role, position } = data;
+       //console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
       if (staff == 0 || level <= 1) {
         alert("Cannot enter this site.");
         window.location = "../pages-login.html";
         return;
       }
+         // Set the selected option based on the role
+         const channelSelect = document.getElementById('channel');
+         if (role === 'MK Online') {
+           channelSelect.value = 'I'; // Set "Online" as selected
+         } else if (role === 'MK Offline') {
+           channelSelect.value = 'O'; // Set "Offline" as selected
+         } else {
+           channelSelect.value = 'N'; // Default to "All"
+         }
+      var permissionNav = document.getElementById('permission-nav');
+      var maintenanceNav = document.getElementById('maintanance-nav');
+      if(role == 'MK Online' || role == 'MK Offline'){
+        
+        permissionNav.classList.add('d-none');
+        maintenanceNav.classList.add('d-none'); 
+      }else{
+        permissionNav.classList.remove('d-none');
+        maintenanceNav.classList.remove('d-none');
+      }
+       // Hide the "Online" option for MK Online role
+       const AllOption = document.getElementById('all-select-channel');
+       const onlineOption = document.getElementById('OnL');
+       const offlineOption = document.getElementById('OfL');
+       if (role === 'MK Online') {
+        offlineOption.classList.add('d-none');
+        AllOption.classList.add('d-none');
+       }else if(role === 'MK Offline'){
+        onlineOption.classList.add('d-none');
+        AllOption.classList.add('d-none');
+       }
       // Conditionally show Maintenance and Permission nav items
       if (level == 2 || level == 3) {
         toggleMaintenanceNav(true);
 
       // Fetch staff data if needed for select options
-      fetch('/ERP/staff_id.php')
+      fetch('../staff_id.php')
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -28,7 +70,7 @@ function getSessionData() {
           data.forEach(item => {
             const option = document.createElement('option');
             option.value = item.staff_id;
-            option.textContent = item.fname_e || item.nick_name;
+            option.textContent = item.fname_e;
             selectElement.appendChild(option);
           });
         })
@@ -51,20 +93,7 @@ function getSessionData() {
 
 // Call the function to fetch session data
 getSessionData();
-function toggleMaintenanceNav(isVisible) {
-  var maintenanceNav = document.getElementById('maintanance-nav');
-  var permissionNav = document.getElementById('permission-nav');
-  var selectSale = document.getElementById('select-sale');
-  if (isVisible) {
-    maintenanceNav.classList.remove('d-none'); // Show the item
-    permissionNav.classList.remove('d-none');
-    selectSale.classList.remove('d-none');
-  } else {
-    maintenanceNav.classList.add('d-none');    // Hide the item
-    permissionNav.classList.add('d-none');
-    selectSale.classList.add('d-none');
-  }
-}
+
 // Fetch year data and update the dashboard based on the selected values
 function fetchYear() {
   const level = document.getElementById('fetch-level').value;
@@ -74,8 +103,6 @@ function fetchYear() {
   const user = document.getElementById('fetch-staff').value;  // Ensure this value is populated before fetching
   const channel = document.getElementById('channel').value;
 
-  // Use the passed element to get the segment number
-  const segment = '999';  // Default value for segment
   
   let Sales;
   if (level == 1) {
@@ -86,7 +113,7 @@ function fetchYear() {
 
   // Construct URLs for fetching the dashboard and report chart data
   const url = `./fetch-dashboard.php?year_no=${year_no}&month_no=${month_no}&channel=${channel}&Sales=${Sales}&is_new=${is_new}`;
-  const url1 = `./reportchart.php?year_no=${year_no}&segment=${segment}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
+  const url1 = `./reportchart.php?year_no=${year_no}&Sales=${Sales}&is_new=${is_new}&channel=${channel}`;
   
   //console.log('Fetching data from URL:', url1);
 
@@ -303,7 +330,8 @@ const percentage = params.percent.toFixed(2);
         }]
       });
     }
-
+    let chartInstance = null; // Track the Chart.js instance
+    let apexChart = null;     // Track the ApexCharts instance
     function updateReport(data1) {
       const segment01 = data1.graphData.map(item => item.product_so);
       const segment02 = data1.graphData.map(item => item.product_so2);
@@ -314,139 +342,49 @@ const percentage = params.percent.toFixed(2);
       const saleorderAccu = data1.graphData.map(item => parseFloat(item.accumulated_so).toFixed(0));
       const dateAP = data1.graphData.map(item => item.format_date);
    
-      chartInstance =  new Chart(document.querySelector('#stakedBarChart'), {
-        type: 'bar',
-        data: {
-          labels: dateAP,
-          datasets: [{
-              label: 'กากตะกอน',
-              data: segment01,
-              backgroundColor: 'rgb(255, 99, 132)',
-            },
-            {
-              label: 'Product offSpec',
-              data: segment02,
-              backgroundColor: 'rgb(75, 192, 195)',
-            },
-            {
-              label: 'HAZ',
-              data: segment03,
-              backgroundColor: '#6610f2',
-            },
-            {
-              label: 'Cleaning',
-              data: segment04,
-              backgroundColor: 'rgb(255, 205, 86)',
-            },
-            {
-              label: 'อื่นๆ',
-              data: segment99,
-              backgroundColor: '#20c997',
-            },
-            {
-              label: 'ยอดขายสะสม',
-              data: saleorderAccu,  // Example data for line chart
-              type: 'line',  // Define this dataset as a line chart
-              borderColor: 'rgb(54, 162, 235)', // Line color
-              fill: false,  // No fill below the line
-              tension: 0.3,  // Smooth curve
-              //yAxisID: 'y-line', 
-            }
-          ]
-        },
-        options: {
-          plugins: {
-            title: {
-              display: true,
-              text: 'ยอดขายรวมประจำปี แยกตามProduct'
-            },
-          },
-          responsive: true,
-          scales: {
-            x: {
-              stacked: true,
-            },
-            y: {
-              stacked: true,
-          
-              ticks: {
-                beginAtZero: true,
-                callback: function(value) {
-                  return value.toLocaleString(); // Format y-axis values
-                }
-            }
-          }
+
+      // If ApexCharts already exists, update the series
+  if (apexChart !== null) {
+    apexChart.updateSeries([
+      { name: 'Target', data: target_revenue },
+      { name: 'Revenue', data: saleorderAccu }
+    ]);
+  } else {
+    // Initialize ApexCharts
+    apexChart = new ApexCharts(document.querySelector("#reportsChart"), {
+      series: [
+        { name: 'Target', data: target_revenue },
+        { name: 'Revenue', data: saleorderAccu }
+      ],
+      chart: {
+        type: 'area',
+        height: 350,
+        zoom: { enabled: false }
+      },
+      markers: { size: 4 },
+      colors: ['#0d6efd', '#2eca6a'],
+      dataLabels: { enabled: false },
+      stroke: { curve: 'straight', width: 2 },
+      subtitle: { text: 'Revenue Movement', align: 'left' },
+      xaxis: { type: 'category', categories: dateAP },
+      yaxis: {
+        opposite: true,
+        labels: {
+          formatter: function(value) {
+            return value.toLocaleString(undefined, { style: 'currency', currency: 'THB' });
           }
         }
-      });
-      // Check if the chart is initialized
-      /*if (!chart) {
-          chart = new ApexCharts(document.querySelector("#reportsChart"), {
-              series: [{
-                  name: 'Target',
-                  data: target_revenue,
-              }, {
-                  name: 'Revenue',
-                  data: saleorderAccu,
-              }],
-              chart: {
-                type: 'area',
-                height: 350,
-                zoom: {
-                  enabled: false
-                }
-              },
-              markers: {
-                  size: 4
-              },
-              colors: ['#0d6efd', '#2eca6a'],
-              dataLabels: {
-                  enabled: false
-              },
-              stroke: {
-                  curve: 'straight',
-                  width: 2
-              },
-              subtitle: {
-                  text: 'Revenue Movement',
-                  align: 'left'
-              },
-              xaxis: {
-                  type: 'category',
-                  categories: dateAP
-              },
-              yaxis: {
-                  opposite: true,
-                  labels: {
-                    formatter: function(value) {
-                        return value.toLocaleString(undefined, { style: 'currency', currency: 'THB' });
-                    }
-                }
-              },
-              tooltip: {
-                  y: {
-                      formatter: function(value) {
-                          return value.toLocaleString(undefined, { style: 'currency', currency: 'THB' });
-                      }
-                  }
-              }
-          });
-          chart.render();
-      } else {
-          // Update the existing chart
-          chart.updateSeries([{
-              name: 'Target',
-              data: target_revenue,
-          }, {
-              name: 'Revenue',
-              data: saleorderAccu,
-          }]);
-          chart.updateOptions({
-              xaxis: {
-                  categories: dateAP
-              }
-          });
-      }*/
+      },
+      tooltip: {
+        y: {
+          formatter: function(value) {
+            return value.toLocaleString(undefined, { style: 'currency', currency: 'THB' });
+          }
+        }
+      }
+    });
+    apexChart.render();
+  }
     }
     
 
@@ -480,77 +418,188 @@ for (let year = currentYear; year >= startYear; year--) {
   option.text = year;
   yearSelect.appendChild(option);
 }
-/*document.addEventListener("DOMContentLoaded", () => {
-  const data1 = { 
-    graphData: [
-      { accumulated_so: 100 }, 
-      { accumulated_so: 200 }, 
-      { accumulated_so: 300 }
-    ]
-  };
-  const saleorderAccu = data1.graphData.map(item => parseFloat(item.accumulated_so).toFixed(0));
-  new Chart(document.querySelector('#stakedBarChart'), {
+
+document.addEventListener("DOMContentLoaded", () => {
+  const targetSales = [6000000, 5000000, 11500000]; // Sales targets
+  const actualSales = [4000000, 6000000, 10000000]; // Actual sales
+    // Determine background color for actual sales based on comparison
+    const salesColors = actualSales.map((sales, index) => {
+      return sales > targetSales[index] ? '#198754' : '#f21e32'; // Green if sales > target, otherwise red
+    });
+  new Chart(document.querySelector('#barChart'), {
     type: 'bar',
     data: {
-      labels: monthNames,
-      datasets: [{
-          label: 'กากตะกอน',
-          data: saleorderAccu,
-          backgroundColor: 'rgb(255, 99, 132)',
+      labels: ['ศุลกากร', 'สรรพากร','เป้ารวม'], // Labels
+      datasets: [
+        {
+          label: 'เป้ายอดขาย', // First dataset
+          data: targetSales, // Data for the first dataset
+          backgroundColor: [
+            '#116bff',
+            '#116bff',
+            '#116bff'
+          ],
+          borderColor: [
+            '#116bff',
+            '#116bff',
+            '#116bff'
+          ],
+          borderWidth: 1
         },
         {
-          label: 'Cleaning',
-          data: [11, 5, 12, 62, 95],
-          backgroundColor: 'rgb(75, 192, 192)',
-        },
-        {
-          label: 'Dataset 3',
-          data: [44, 5, 22, 35, 62],
-          backgroundColor: 'rgb(255, 205, 86)',
-        },
-        {
-          label: 'ยอดขายสะสม',
-          data: [155  , 210, 310, 100, 100],  // Example data for line chart
-          type: 'line',  // Define this dataset as a line chart
-          borderColor: 'rgb(54, 162, 235)', // Line color
-          height: 350,
-          fill: true,  // No fill below the line
-          tension: 0.3,  // Smooth curve
-          yAxisID: 'y-line', 
-          stroke: {
-            curve: 'straight',
-            width: 2
-        },
+          label: 'ยอดขาย', // Second dataset
+          data: actualSales, // Data for the second dataset
+          backgroundColor: salesColors,
+          borderColor: salesColors,
+          borderWidth: 1
         }
       ]
     },
     options: {
-      plugins: {
-        title: {
-          display: true,
-          text: 'ยอดขายรวมประจำปี แยกตามProduct'
-        },
-      },
-      responsive: true,
       scales: {
-        x: {
-          stacked: true,
-        },
         y: {
-          stacked: true
-        },
-        'y-line': {  // Define a second y-axis for the line chart
-          type: 'linear',
-          position: 'right',
-          ticks: {
-            beginAtZero: true,
-            callback: function(value) {
-              return value.toLocaleString(); // Format y-axis values
-            }
-          }
+          beginAtZero: true
         }
       }
     }
   });
-});*/
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const targetSales = [2500000, 3500000, 6000000]; // Sales targets
+  const actualSales = [1200000, 4800000, 6000000]; // Actual sales
+  const salesColors = actualSales.map((sales, index) => {
+    return sales >= targetSales[index] ? '#198754' : '#f21e32'; // Green if sales > target, otherwise red
+  });
+  new Chart(document.querySelector('#barChart1'), {
+    type: 'bar',
+    data: {
+      labels: ['โรงงานขนาดเล็ก', 'โรงงานขนาดใหญ่','เป้ารวม'], // Labels
+      datasets: [
+        {
+          label: 'เป้ายอดขาย', // First dataset
+          data: targetSales, // Data for the first dataset
+          backgroundColor: [
+            '#116bff',
+            '#116bff',
+            '#116bff'
+          ],
+          borderColor: [
+            '#116bff',
+            '#116bff',
+            '#116bff'
+          ],
+          borderWidth: 1
+        },
+        {
+          label: 'ยอดขาย', // Second dataset
+          data: actualSales, // Data for the second dataset
+          backgroundColor: salesColors,
+          borderColor: salesColors,
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const targetSales = [2000000, 3000000, 2000000, 7000000]; // Sales targets
+  const actualSales = [1200000, 1800000, 500000, 3500000]; // Actual sales
+  const salesColors = actualSales.map((sales, index) => {
+    return sales >= targetSales[index] ? '#198754' : '#f21e32'; // Green if sales > target, otherwise red
+  });
+  new Chart(document.querySelector('#barChart2'), {
+    type: 'bar',
+    data: {
+      labels: ['บ่อน้ำดี', 'บ่อน้ำเสีย', 'เครื่องจักร','เป้ารวม'], // Labels
+      datasets: [
+        {
+          label: 'เป้ายอดขาย', // First dataset
+          data: targetSales, // Data for the first dataset
+          backgroundColor: [
+            '#116bff',
+            '#116bff',
+            '#116bff',
+            '#116bff'
+          ],
+          borderColor: [
+            '#116bff',
+            '#116bff',
+            '#116bff',
+            '#116bff'
+          ],
+          borderWidth: 1
+        },
+        {
+          label: 'ยอดขาย', // Second dataset
+          data: actualSales, // Data for the second dataset
+          backgroundColor: salesColors,
+          borderColor: salesColors,
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const targetSales = [2500000, 3500000, 6000000]; // Sales targets
+  const actualSales = [1200000, 4800000, 6000000]; // Actual sales
+  const salesColors = actualSales.map((sales, index) => {
+    return sales >= targetSales[index] ? '#198754' : '#f21e32'; // Green if sales > target, otherwise red
+  });
+  new Chart(document.querySelector('#barChart3'), {
+    type: 'bar',
+    data: {
+      labels: ['เป็นโรงงาน', 'ไม่เป็นโรงงาน', 'เป้ารวม'], // Labels
+      datasets: [
+        {
+          label: 'เป้ายอดขาย', // First dataset
+          data: targetSales, // Data for the first dataset
+          backgroundColor: [
+            '#116bff',
+            '#116bff',
+            '#116bff'
+          ],
+          borderColor: [
+            '#116bff',
+            '#116bff',
+            '#116bff'
+          ],
+          borderWidth: 1
+        },
+        {
+          label: 'ยอดขาย', // Second dataset
+          data: actualSales, // Data for the second dataset
+          backgroundColor:salesColors,
+          borderColor: salesColors,
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+});
+
 

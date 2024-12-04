@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include_once '../../connectDB/connectDB.php'; // Include your database connection script
+include_once '../../connectDB/connectWebDB.php'; // Include your database connection script
 $objCon = connectDB(); // Connect to the database
 
 if ($objCon === false) {

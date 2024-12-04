@@ -549,7 +549,7 @@
                 <option selected value="0">All</option>
                 <option value="Y">NEW</option>
                 <option value="N">OLD</option>
-
+                <option value="K">Key Account</option>
               </select>
               <label for="is_new">ประเภทลูกค้า</label>
             </div>
@@ -557,9 +557,9 @@
           <div class="col-xxl-2 col-md-4">
             <div class="form-floating mb-3">
               <select class="form-select" id="channel" aria-label="channel"onchange="fetchYear()">
-                <option selected value="N">All</option>
-                <option value="I">Online</option>
-                <option value="O">Offine</option>
+                <option id="all-select-channel" selected value="N">All</option>
+                <option id="OnL" value="I">Online</option>
+                <option id="OfL" value="O">Offine</option>
               </select>
               <label for="channel">Channel</label>
             </div>
@@ -575,6 +575,7 @@
       <div class="col-xxl-3 col-md-4">
         <div class="form-floating mb-3">
           <select class="form-select" id="year" aria-label="Year"onchange="fetchYear()">
+            <option value="2025">2025</option>
           </select>
           <label for="year">Year</label>
         </div>
@@ -591,22 +592,41 @@
         <!-- Left side columns -->
         <div class="col-lg-8">
           <div class="row">
-
+            <div class="col-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Hazardous</h5>
+                  <canvas id="barChart3" style="max-height: 400px;"></canvas>
+              </div>
+            </div>
+            </div>
+            <div class="col-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Product off spec</h5>
+                  <canvas id="barChart" style="max-height: 400px;"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Sludge</h5>
+                  <canvas id="barChart1" style="max-height: 400px;"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Cleaning</h5>
+                  <canvas id="barChart2" style="max-height: 400px;"></canvas>
+                </div>
+              </div>
+            </div>
             <!-- Sales Card -->
             <div class="col-xxl-6 col-md-6">
               <div class="card info-card customers-card">
-
-                <!--div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#" id= "aponline" value="I">Online</a></li>
-                    <li><a class="dropdown-item" href="#" id ="apoffline" value="O">Offline</a></li>
-                  </ul>
-                </div-->
 
                 <div class="card-body">
                   <h5 class="card-title">Appoint</h5>
@@ -631,18 +651,6 @@
 <div class="col-xxl-6 col-md-6">
   <div class="card info-card sales-card">
 
-    <!--div class="filter">
-      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-        <li class="dropdown-header text-start">
-          <h6>Filter</h6>
-        </li>
-
-        <li><a class="dropdown-item" href="#">Today</a></li>
-        <li><a class="dropdown-item" href="#">This Month</a></li>
-        <li><a class="dropdown-item" href="#">This Year</a></li>
-      </ul>
-    </div-->
 
     <div class="card-body">
       <h5 class="card-title">Quotation</h5>
@@ -667,18 +675,6 @@
 <div class="col-xxl-6 col-md-6">
   <div class="card info-card revenue-card">
 
-    <!--div class="filter">
-      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-        <li class="dropdown-header text-start">
-          <h6>Filter</h6>
-        </li>
-
-        <li><a class="dropdown-item" href="#">Today</a></li>
-        <li><a class="dropdown-item" href="#">This Month</a></li>
-        <li><a class="dropdown-item" href="#">This Year</a></li>
-      </ul>
-    </div-->
 
     <div class="card-body">
       <h5 class="card-title">Estimate Revenue</h5>
@@ -702,19 +698,6 @@
 <div class="col-xxl-6 col-md-6">
   <div class="card info-card revenue-card">
 
-    <!--div class="filter">
-      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-        <li class="dropdown-header text-start">
-          <h6>Filter</h6>
-        </li>
-
-        <li><a class="dropdown-item" href="#">Today</a></li>
-        <li><a class="dropdown-item" href="#">This Month</a></li>
-        <li><a class="dropdown-item" href="#">This Year</a></li>
-      </ul>
-    </div-->
-
     <div class="card-body">
       <h5 class="card-title">Revenue</h5>
 
@@ -735,70 +718,16 @@
 <div class="col-12">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Stacked Bar Chart</h5>
-      <canvas id="stakedBarChart" style="max-height: 400px;"></canvas>
+      <h5 class="card-title">ยอดขายรวมประจำปี</h5>
+      <div id="reportsChart" style="min-height: 400px;"></div>
+
     </div>
   </div>
 </div>
- <!-- Reports -->
- <!--div class="col-12">
-              <div class="card">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Product</h6>
-                    </li>
-                    <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="999" onchange="fetchYear()" >All</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="00" onchange="fetchYear()">N/A</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="01" onchange="fetchYear()">กากตะกอน-ฝุ่นทราย</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="02" onchange="fetchYear()">Product off spec</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="03" onchange="fetchYear()">ขยะอันตราย</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="04" onchange="fetchYear()">Cleanning</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="05" onchange="fetchYear()">Cleaning + กำจัด</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item"  style="cursor: pointer;" data-segment-no="99" onchange="fetchYear()">อื่น ๆ</a>
-                  </li>
-                  </ul>
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">Revenue Movement <pan>|Today</span></h5>
-                  <div id="reportsChart"></div>
-                </div>
-
-              </div>
-            </div--><!-- End Reports -->
  <!-- Recent Sales -->
  <div class="col-12">
   <div class="card recent-sales overflow-auto">
 
-    <!--div class="filter">
-      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-        <li class="dropdown-header text-start">
-          <h6>Filter</h6>
-        </li>
-
-        <li><a class="dropdown-item" value="0">Today</a></li>
-        <li><a class="dropdown-item" href="#">This Month</a></li>
-        <li><a class="dropdown-item" href="#">This Year</a></li>
-      </ul>
-    </div-->
 
     <div class="card-body">
       <h5 class="card-title">Region</h5>
@@ -824,79 +753,6 @@
 
   </div>
 </div><!-- End Recent Sales -->
-            <!-- Recent Sales>
-            <div class="col-12">
-              <div class="card recent-sales overflow-auto">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" value="0">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Recent Sales </h5>
-
-                  <table  class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td>Brandon Jacob</td>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td>$64</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2147</a></th>
-                        <td>Bridie Kessler</td>
-                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                        <td>$47</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2049</a></th>
-                        <td>Ashleigh Langosh</td>
-                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                        <td>$147</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Angus Grady</td>
-                        <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                        <td>$67</td>
-                        <td><span class="badge bg-danger">Rejected</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-            </div><End Recent Sales -->
 
           </div>
         </div><!-- End Left side columns -->
@@ -946,7 +802,8 @@
 
 
         </div><!-- End Right side columns -->
-
+       
+        
       </div>
     </section>
 
