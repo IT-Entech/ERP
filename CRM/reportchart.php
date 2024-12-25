@@ -27,8 +27,40 @@ switch ($combinedKey) {
         $target = '100000000';
         break;
     case '2025_N_0_N':
-        $target = '80000000';
-        break;    
+        $target = '81200000';
+        $target_sludge = '6300000';
+        $target_pos = '11490000';
+        $target_haz = '14400000';
+        $target_cl = '7000000';
+        break; 
+    case '2025_N_Y_N':
+        $target = '39150000';
+        $target_sludge = '6000000';
+        $target_pos = '11000000';
+        $target_haz = '9000000';
+        $target_cl = '3000000';
+        break;      
+    case '2025_N_N_N':
+        $target = '42000000';
+        $target_sludge = '6000000';
+        $target_pos = '11000000';
+        $target_haz = '9000000';
+        $target_cl = '3000000';
+        break;
+    case '2025_N_0_I':
+        $target = '16000000';
+        $target_sludge = '3000000';
+        $target_pos = '5000000';
+        $target_haz = '5000000';
+        $target_cl = '3000000';
+        break;
+    case '2025_N_0_O':
+        $target = '65150000';
+        $target_sludge = '3260000';
+        $target_pos = '6500000';
+        $target_haz = '9000000';
+        $target_cl = '3000000';
+        break; 
     case '2024_Y_N':
         $target = '58000000';
         break;
@@ -81,6 +113,29 @@ GROUP BY
     FORMAT(DATEFROMPARTS(A.year_no, A.month_no, 1), 'MMM'), A.month_no, A.year_no
 ORDER BY
     A.month_no ASC";
+$sqlsludge = " SELECT
+B.customer_segment_name AS product,
+C.customer_subsegment_name AS segment,
+    SUM(A.total_before_vat) AS sale_value,
+CASE 
+WHEN C.customer_subsegment_code = 011 THEN 12000000
+WHEN C.customer_subsegment_code = 012 THEN 8000000
+END
+ AS accumulated_target
+FROM
+    View_SO_SUM A
+LEFT JOIN 
+    ms_customer_segment B ON A.customer_segment_code = B.customer_segment_code
+LEFT JOIN 
+    ms_customer_subsegment C ON B.customer_segment_code = C.customer_segment_code
+WHERE
+    B.customer_segment_code = 01
+AND
+    A.year_no = ?
+GROUP BY
+   B.customer_segment_name,C.customer_subsegment_name, B.customer_segment_code,C.customer_subsegment_code
+ORDER BY C.customer_subsegment_code ASC
+";
 $params = array($year_no);
 }
 /*else if($is_new == 0 && $channel == 'N'){
@@ -169,14 +224,19 @@ ORDER BY
 $params = array($year_no);
 }*/
 
+// Execute queries
 $stmt = sqlsrv_query($objCon, $sqlrevenue_accu, $params);
 if ($stmt === false) {
     die(print_r(sqlsrv_errors(), true));
 }
+
+// Fetch data
 $graphData = [];
+
 while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
     $graphData[] = $row;   
 }
+
 
 $data = [
     'graphData' => $graphData

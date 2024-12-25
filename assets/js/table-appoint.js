@@ -86,10 +86,57 @@ function updateTable(data) {
       <th scope='row'>${index+1}</th>
       <td>${row.format_date ? row.format_date : ''}</td>
       <td>${row.customer_name}</td>
-      <td>${row.appoint_no}</td>
+      <td><input type="text" class="form-control" id="appoint_no${index + 1}"name="appoint_no${index + 1}"value="${row.appoint_no}" readonly></td>
+    <td>
+  <select id="status-${row.appoint_no}" name="status${index+1}" class="form-select text-center ${row.is_status == 0 ? 'bg-secondary text-white' : row.is_status == 2 ? 'bg-danger text-white' : row.is_status == 3 ? 'bg-warning text-muted' : row.is_status == 4 ? 'bg-danger text-white' : ''}"  onchange="handleSelectChange('${row.appoint_no}')">
+    <option value="${row.is_status}">
+      ${row.is_status == 0 ? 'N/A' : row.is_status == 2 ? 'Rejected' : row.is_status == 3 ? 'Pending' : row.is_status == 4 ? 'ไม่เสนอราคา' : row.is_status}
+    </option>
+<option value="${row.is_status == 0 ? 3 : row.is_status == 4 ? 'N/A' : '0'}">
+  ${row.is_status == 0 ? 'Pending' : row.is_status == 4 ? 'ไม่เสนอราคา' : 'N/A'}
+</option>
+
+  </select>
+</td> 
+      <td>
+  <input 
+    type="text" 
+    name="remark${index+1}" 
+    class="form-control" 
+    value="${row.remark ? row.remark : ''}" 
+    id="remark-${row.appoint_no}"
+    ${row.is_status == 0 ? 'disabled' : ''}
+  >
+</td>
+      <td>${row.update_time}</td>
     `;
     tbody.appendChild(tr);
   });
+}
+function handleSelectChange(appointNo) {                              
+  const selectElement = document.getElementById(`status-${appointNo}`);
+  const inputElement = document.getElementById(`remark-${appointNo}`);
+
+  // Get the selected value from the select element
+  const selectedValue = selectElement.value;
+
+  // If the selected value is 0, disable the input field
+  if (selectedValue == 0) {
+    inputElement.disabled = true;
+  } else {
+    inputElement.disabled = false;
+  }
+   // Remove any existing color classes
+   selectElement.classList.remove('bg-secondary', 'bg-warning', 'text-white', 'text-muted');
+
+   // Add the appropriate class based on the selected value
+   if (selectedValue == 0) {
+     selectElement.classList.add('bg-secondary', 'text-white'); // Grey for N/A
+   } else if (selectedValue == 3) {
+     selectElement.classList.add('bg-warning', 'text-muted');   // Yellow for Pending
+   } else if (selectedValue == 4) {
+    selectElement.classList.add('bg-danger', 'text-muted');   // Yellow for Pending
+  }
 }
 document.addEventListener('DOMContentLoaded', fetchData);
 

@@ -18,8 +18,8 @@ function getSessionData() {
 
       const { name, staff, level, role, position } = data;
        //console.log(`Name: ${name}, Staff: ${staff}, Level: ${level}, Role: ${role}`);
-      if (staff == 0 || level <= 1) {
-        alert("Cannot enter this site.");
+      if (staff == 0 || level < 1) {
+        alert("คุณไม่ได้รับสิทธิ์ให้เข้าหน้านี้");
         window.location = "../pages-login.html";
         return;
       }
@@ -119,21 +119,40 @@ function fetchYear() {
 
   // Fetch dashboard data
   fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Error fetching dashboard data: ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      //console.log('Dashboard Data:', data);  // Log the data to check the response
-      updateTable(data);  // Function to update the table with dashboard data
-      updateChart(data.segmentData); // Function to update the chart with segment data from dashboard
-    })
-    .catch(error => console.error('Error fetching dashboard data:', error));
+  .then(response => response.text())  // Use text() for debugging
+  .then(data => {
+    console.log('Raw response:', data);  // Log the raw response
 
-  // Fetch report chart data
-  fetch(url1)
+    if (data.trim() === '') {
+      console.error('Empty response');
+      return;
+    }
+
+    // Clean up the response (if necessary)
+    const cleanedData = data.replace(/^\s*[^[{]+/, '').replace(/[^}\]]*$/, '');
+    console.log('Cleaned data:', cleanedData);  // Log cleaned data before parsing
+
+    try {
+      const jsonData = JSON.parse(cleanedData);  // Attempt to parse cleaned data
+
+      if (!jsonData || !Array.isArray(jsonData.revenue)) {
+        throw new Error('Invalid data format or missing revenueData');
+      }
+
+      // Proceed with updating the table
+      updateTable(jsonData);
+      updateChart(jsonData);
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      console.error('Raw response was not valid JSON:', cleanedData);
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching report chart data:', error);
+  });
+
+    // Fetch report chart data
+    fetch(url1)
     .then(response => {
       if (!response.ok) {
         throw new Error(`Error fetching report chart data: ${response.statusText}`);
@@ -144,133 +163,144 @@ function fetchYear() {
       //console.log('Report Chart Data:', data1);  // Log the data to check the response
       updateReport(data1);
     })
-    .catch(error => console.error('Error fetching report chart data:', error));
-}
+    .catch(error => console.error('Error fetching report chart data:', error)); 
+} 
 
 function updateTable(data) {
-        let totalSum = 0;
-        let totalSumso = 0;
-        data.revenueData.forEach(revenue => {
-            totalSum += parseFloat(revenue.so_amount)|| 0;
-            totalSumso += parseFloat(revenue.so_no)|| 0;
-        });
+  let totalAP = 0;
+  let totalAPQ = 0;
+  let totalQT = 0;
+  let potentialQT = 0;
+  let prospectQT = 0;
+  let pipelineQT = 0;
+  let totalSUMQT = 0;
+  let totalOR = 0;
+  let totalSUMOR = 0;
+  let totalSoAmount = 0;
+  let totalCustomerNumber = 0;
 
-        const revenueElement = document.getElementById('revenue');
-        revenueElement.textContent = totalSum.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }); 
+  // Process each revenue data and accumulate the values
+  data.appointment.forEach(ap => {
+    const app = parseFloat(ap.appoint_no) || 0;
+    const appq = parseFloat(ap.appoint_quality) || 0;
 
-        const countElement2 = document.getElementById('so_number');
-        countElement2.textContent = totalSumso.toLocaleString('en-US', {
-        });  
+    totalAP += app;  // Accumulate so_amount
+    totalAPQ += appq;  // Accumulate customer_number
+  });
+  data.costSheets.forEach(qt => {
+    const soAmount = parseFloat(qt.so_amount) || 0;
+    const customerNumber = parseFloat(qt.qt_customer) || 0;
+    const potencustomerNumber = parseFloat(qt.potential) || 0;
+    const prospectcustomerNumber = parseFloat(qt.prospect) || 0;
+    const pipelinecustomerNumber = parseFloat(qt.pipeline) || 0;
 
+    totalSUMQT += soAmount;  // Accumulate so_amount
+    totalQT += customerNumber;  // Accumulate customer_number
+    potentialQT += potencustomerNumber;  // Accumulate customer_number
+    prospectQT += prospectcustomerNumber;  // Accumulate customer_number
+    pipelineQT += pipelinecustomerNumber;  // Accumulate customer_number
+  });
+  data.orders.forEach(order => {
+    const soAmount = parseFloat(order.order_amount) || 0;
+    const OrderNumber = parseFloat(order.order_no) || 0;
 
-        let totalSum1 = 0;
-        let totalSumqt = 0;
-        data.costsheetData.forEach(qt => {
-          totalSum1 += parseFloat(qt.so_amount)|| 0;
-          totalSumqt += parseFloat(qt.qt_no)|| 0;
-        });
-        const qtElement = document.getElementById('qt_value');
-        qtElement.textContent = totalSum1.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }); 
+    totalSUMOR += soAmount;  // Accumulate so_amount
+    totalOR += OrderNumber;  // Accumulate customer_number
+  });
+  data.revenue.forEach(revenue => {
+    const soAmount = parseFloat(revenue.so_amount) || 0;
+    const customerNumber = parseFloat(revenue.customer_number) || 0;
 
+    totalSoAmount += soAmount;  // Accumulate so_amount
+    totalCustomerNumber += customerNumber;  // Accumulate customer_number
+  });
 
-        const countElement1 = document.getElementById('qt_number');
-        countElement1.textContent = totalSumqt.toLocaleString('en-US', {
-        }) ; 
+  // Update the revenue element with total customer number
+  const apElement = document.getElementById('appoint');
+  if (apElement) {
+    apElement.textContent = totalAP.toLocaleString('en-US');
+  }
 
-       
-        let totalSumap = 0;
-        let totalSumap_quality = 0;
-        data.appointData.forEach(ap => {
-          totalSumap += parseFloat(ap.appoint_no) || 0;
-          totalSumap_quality += parseFloat(ap.appoint_quality) || 0;
-        });
-        const countElement = document.getElementById('appoint');
-        countElement.textContent = totalSumap.toLocaleString('en-US', {
-        }); 
+  // Update the so_number element with total so amount
+  const apElement2 = document.getElementById('ap_quality');
+  if (apElement2) {
+    apElement2.textContent = totalAPQ.toLocaleString('en-US');
+  }
+ // Update the revenue element with total customer number
+ const qtElement = document.getElementById('qt_value');
+ if (qtElement) {
+  qtElement.textContent = totalSUMQT.toLocaleString('en-US');
+ }
 
-        const countElementAP = document.getElementById('ap_quality');
-        countElementAP.textContent = totalSumap_quality.toLocaleString('en-US', {
-        }); 
+ // Update the so_number element with total so amount
+ const qtElement2 = document.getElementById('qt_number');
+ if (qtElement2) {
+  qtElement2.textContent = totalQT.toLocaleString('en-US');
+ }
+ const qtElement3 = document.getElementById('potential_quality');
+ if (qtElement3) {
+  qtElement3.textContent = potentialQT.toLocaleString('en-US');
+ }
+ const qtElement4 = document.getElementById('prospect_quality');
+ if (qtElement4) {
+  qtElement4.textContent = prospectQT.toLocaleString('en-US');
+ }
+ const qtElement5 = document.getElementById('pipeline_quality');
+ if (qtElement5) {
+  qtElement5.textContent = pipelineQT.toLocaleString('en-US');
+ }
+ 
+ // Update the revenue element with total customer number
+ const orderElement = document.getElementById('order_est');
+ if (orderElement) {
+  orderElement.textContent = totalSUMOR.toLocaleString('en-US');
+ }
 
+ // Update the so_number element with total so amount
+ const orderElement2 = document.getElementById('or_number');
+ if (orderElement2) {
+  orderElement2.textContent = totalOR.toLocaleString('en-US');
+ }
+  // Update the revenue element with total customer number
+  const revenueElement = document.getElementById('revenue');
+  if (revenueElement) {
+    revenueElement.textContent = totalSoAmount.toLocaleString('en-US');
+  }
 
-        let totalSum3 = 0;
-        data.orderData.forEach(or => {
-          totalSum3 += parseFloat(or.order_no) || 0;
-        });
-        const orElement1 = document.getElementById('or_number');
-        orElement1.textContent = totalSum3.toLocaleString('en-US', {
-        });   
+  // Update the so_number element with total so amount
+  const countElement2 = document.getElementById('customer_number');
+  if (countElement2) {
+    countElement2.textContent = totalCustomerNumber.toLocaleString('en-US');
+  }
 
-        let totalSum2 = 0;
-        data.orderData.forEach(or => {
-          totalSum2 += parseFloat(or.order_amount);
-        });
-        const orElement = document.getElementById('order_est');
-        orElement.textContent = totalSum2.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }); 
-
-                // Calculate and display the ratio (revenue per sales order)
-        const winrate = totalSumso || 0;
-        const winrateElement = document.getElementById('winrate');
-        winrateElement.textContent = winrate.toLocaleString('en-US', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        });
-
-        const winrateP = (totalSumso / totalSumqt) * 100 || 0;
-        const winratePElement = document.getElementById('winrate_percent');
-        winratePElement.textContent = winrateP.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }) + ' %';
-                // Calculate and display the ratio (revenue per sales order)
-const ratio = totalSum / totalSumso || 0;
-const ratioElement = document.getElementById('AOV');
-ratioElement.textContent = ratio.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-});
-
-const percentage = (ratio / totalSum) * 100 || 0;
-const percentageElement = document.getElementById('AOV_percent');
-percentageElement.textContent = percentage.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-}) + ' %';
-const tbody = document.querySelector('#region tbody');
+  const tbody = document.querySelector('#region tbody');
   tbody.innerHTML = '';
 
-  data.regionData.forEach((row, index) => {
+  data.regions.forEach((row, index) => {
     const tr = document.createElement('tr');
 
     tr.innerHTML = `
       <td>${row.segment}</td>
       <td>${row.North}</td>
       <td>${row.Central}</td>
-      <td>${row.East}</td>
+       <td>${row.East}</td>
       <td>${row.North_East}</td>
       <td>${row.West}</td>
-      <td>${row.South}</td>
+     <td>${row.South}</td>
     `;
 
     tbody.appendChild(tr);
   });
-    }
-    
+
+}
+
+ 
     
   
     //*****************************pie segment chart ***************************************************//
-    function updateChart(segmentData) {
+    function updateChart(data) {
       // Prepare chart data with segment_count as the value for the pie chart
-      const chartData = segmentData.map(item => ({
+      const chartData = data.segments.map(item => ({
         value: item.segment_count, // This will be the displayed value in the pie chart
         name: item.customer_segment_name, // Segment name for the pie slices
         total_before_vat: item.total_before_vat, // Include total_before_vat for the tooltip
@@ -333,11 +363,6 @@ const percentage = params.percent.toFixed(2);
     let chartInstance = null; // Track the Chart.js instance
     let apexChart = null;     // Track the ApexCharts instance
     function updateReport(data1) {
-      const segment01 = data1.graphData.map(item => item.product_so);
-      const segment02 = data1.graphData.map(item => item.product_so2);
-      const segment03 = data1.graphData.map(item => item.product_so3);
-      const segment04 = data1.graphData.map(item => item.product_so4);
-      const segment99 = data1.graphData.map(item => item.product_so99);
       const target_revenue = data1.graphData.map(item => item.accumulated_target);
       const saleorderAccu = data1.graphData.map(item => parseFloat(item.accumulated_so).toFixed(0));
       const dateAP = data1.graphData.map(item => item.format_date);
@@ -419,6 +444,8 @@ for (let year = currentYear; year >= startYear; year--) {
   yearSelect.appendChild(option);
 }
 
+
+  //console.log('Session Data:', target_revenue);
 document.addEventListener("DOMContentLoaded", () => {
   const targetSales = [6000000, 5000000, 11500000]; // Sales targets
   const actualSales = [4000000, 6000000, 10000000]; // Actual sales

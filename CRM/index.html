@@ -405,12 +405,12 @@
         <ul id="tables-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
           <li>
             <a href="tables-appoint.html">
-              <i class="bi bi-circle"></i><span>Tables Appoint</span>
+              <i class="bi bi-circle"></i><span>รายชื่อลูกค้าที่ยังไม่ได้เสนอราคา</span>
             </a>
           </li>
           <li>
             <a href="Update-Status.html">
-              <i class="bi bi-circle"></i><span>Update Status</span>
+              <i class="bi bi-circle"></i><span>อัพเดทใบเสนอราคาลูกค้า</span>
             </a>
           </li>
           <!--li>
@@ -575,7 +575,7 @@
       <div class="col-xxl-3 col-md-4">
         <div class="form-floating mb-3">
           <select class="form-select" id="year" aria-label="Year"onchange="fetchYear()">
-            <option value="2025">2025</option>
+            <!--option value="2025">2025</option-->
           </select>
           <label for="year">Year</label>
         </div>
@@ -583,7 +583,126 @@
       
     </div>
   </div>
-      
+  <div class="card">
+    <div class="card-body pb-4">
+      <h6 class="card-title">Quotation</h6>
+      <div class="row justify-content-center">
+        <div class="col-3 text-center">
+          <h5 class="card-title fw-bold">ALL</h5>
+          <h4  class="large pt-1 fw-bold"></h4>
+          <span id="qt_value" class="text-success large pt-1 fw-bold"></span>
+          <span class="text-muted small pt-2 ps-1">THB</span>
+        </div>
+      </div>
+
+      <div class="row justify-content-center"> 
+        <div class="col-3 text-center">
+          <h5 class="card-title fw-bold">Potential</h5>
+          <h4 id="potential_quality" class="text-success large pt-1 fw-bold"></h4>
+        </div>
+        <div class="col-3 text-center">
+          <h5 class="card-title fw-bold">Prospect</h5>
+          <h4 id="prospect_quality" class="text-success large pt-1 fw-bold"></h4>
+        </div>
+        <div class="col-3 text-center">
+          <h5 class="card-title fw-bold">Pipeline</h5>
+          <h4 id="pipeline_quality" class="text-success large pt-1 fw-bold"></h4>
+        </div>
+      </div>
+    </div>
+  </div>
+              <!-- Sales Card -->
+              <div class="row justify-content-center dashboard"> 
+            <div class="col-xxl-6 col-md-6">
+              <div class="card info-card customers-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Lead</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 id="appoint"></h6>
+                      <span id="ap_quality" class="text-success large pt-1 fw-bold"></span>
+
+                    </div>
+                    
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+<!-- Customers Card -->
+<div class="col-xxl-6 col-md-6">
+  <div class="card info-card sales-card">
+
+
+    <div class="card-body">
+      <h5 class="card-title">Quotation</h5>
+
+      <div class="d-flex align-items-center">
+        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+          <i class="bi bi-cart"></i>
+        </div>
+        <div class="ps-3">
+          <h6 id="qt_number"></h6>
+          
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- End Customers Card -->
+
+<!-- Revenue Card -->
+<div class="col-xxl-6 col-md-6">
+  <div class="card info-card revenue-card">
+
+
+    <div class="card-body">
+      <h5 class="card-title">Estimate Revenue</h5>
+
+      <div class="d-flex align-items-center">
+        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+          <i class="bi bi-cash-stack"></i>
+        </div>
+        <div class="ps-3">
+          <h6 id="or_number"></h6>
+          <span  id="order_est"class="text-success large pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1">THB</span>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- End Revenue Card -->
+
+<!-- Revenue Card -->
+<div class="col-xxl-6 col-md-6">
+  <div class="card info-card revenue-card">
+
+    <div class="card-body">
+      <h5 class="card-title">Revenue</h5>
+
+      <div class="d-flex align-items-center">
+        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+          <i class="bi bi-cash-stack"></i>
+        </div>
+        <div class="ps-3">
+          <h6 id="customer_number"></h6>
+          <span  id="revenue" class="text-success large pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1">THB</span>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div><!-- End Revenue Card -->
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
@@ -624,97 +743,7 @@
                 </div>
               </div>
             </div>
-            <!-- Sales Card -->
-            <div class="col-xxl-6 col-md-6">
-              <div class="card info-card customers-card">
 
-                <div class="card-body">
-                  <h5 class="card-title">Appoint</h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 id="appoint"></h6>
-                      <span id="ap_quality"class="text-success large pt-1 fw-bold"></span>
-
-                    </div>
-                    
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Sales Card -->
-
-<!-- Customers Card -->
-<div class="col-xxl-6 col-md-6">
-  <div class="card info-card sales-card">
-
-
-    <div class="card-body">
-      <h5 class="card-title">Quotation</h5>
-
-      <div class="d-flex align-items-center">
-        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-          <i class="bi bi-cart"></i>
-        </div>
-        <div class="ps-3">
-          <h6 id="qt_number"></h6>
-          <span id="qt_value" class="text-success large pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1">THB</span>
-
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-</div><!-- End Customers Card -->
-
-<!-- Revenue Card -->
-<div class="col-xxl-6 col-md-6">
-  <div class="card info-card revenue-card">
-
-
-    <div class="card-body">
-      <h5 class="card-title">Estimate Revenue</h5>
-
-      <div class="d-flex align-items-center">
-        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-          <i class="bi bi-cash-stack"></i>
-        </div>
-        <div class="ps-3">
-          <h6 id="or_number"></h6>
-          <span id="order_est" class="text-success large pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1">THB</span>
-
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div><!-- End Revenue Card -->
-
-<!-- Revenue Card -->
-<div class="col-xxl-6 col-md-6">
-  <div class="card info-card revenue-card">
-
-    <div class="card-body">
-      <h5 class="card-title">Revenue</h5>
-
-      <div class="d-flex align-items-center">
-        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-          <i class="bi bi-cash-stack"></i>
-        </div>
-        <div class="ps-3">
-          <h6 id="so_number"></h6>
-          <span id="revenue" class="text-success large pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1">THB</span>
-
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div><!-- End Revenue Card -->
 <div class="col-12">
   <div class="card">
     <div class="card-body">
@@ -759,8 +788,8 @@
 
         <!-- Right side columns -->
         <div class="col-lg-4">
-       
-          <!-- Website Traffic -->
+          
+
           <div class="card">
         
             <div class="card-body pb-4" style="display: flex;
@@ -824,7 +853,7 @@
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Vendor JS Files -->
   <script src="../assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

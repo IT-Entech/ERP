@@ -17,10 +17,13 @@ $month_no = isset($_GET['month_no']) ? $_GET['month_no'] : $currentMonth;
 /*$channel = isset($_GET['channel']) ? $_GET['channel'] : NULL;*/
 
 if($year_no <> 0 && $month_no <> 0 && $Sales == 'N'){
-    $sqlappoint = " SELECT 
+    $sqlappoint = "SELECT 
                     FORMAT(A.appoint_date, 'yyyy-MM-dd') AS format_date,
 					A.customer_name,
-					CASE WHEN A.qt_no IS NULL AND A.is_status <> 4 THEN A.appoint_no END AS appoint_no
+					CASE WHEN A.qt_no IS NULL AND A.is_status <> 4 THEN A.appoint_no END AS appoint_no,
+                    A.is_status,
+                    A.remark,
+                    FORMAT(A.update_date, 'yyyy-MM-dd') AS update_time
                     FROM 
                     appoint_head A
                     LEFT JOIN 
@@ -32,10 +35,13 @@ if($year_no <> 0 && $month_no <> 0 && $Sales == 'N'){
                     format_date DESC, appoint_no DESC";
                    $params = array($month_no, $year_no);
 }else{
-    $sqlappoint = " SELECT 
+    $sqlappoint = "SELECT 
                     FORMAT(A.appoint_date, 'yyyy-MM-dd') AS format_date,
 					A.customer_name,
-					CASE WHEN A.qt_no IS NULL AND A.is_status <> 4 THEN A.appoint_no END AS appoint_no
+					CASE WHEN A.qt_no IS NULL AND A.is_status <> 4 THEN A.appoint_no END AS appoint_no,
+                    A.is_status,
+                    A.remark,
+                    FORMAT(A.update_date, 'yyyy-MM-dd') AS update_time
                     FROM 
                     appoint_head A
                     LEFT JOIN 

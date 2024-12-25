@@ -9,6 +9,13 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+#draggable-btn {
+  position: fixed; /* Makes it movable */
+  top: 50px;
+  left: 50px;
+  cursor: grab;
+  z-index: 9999;
+}
 
 :root {
   scroll-behavior: smooth;

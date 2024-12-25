@@ -4,7 +4,8 @@ include './header.php'; // Fetch session data
 
 $level = isset($_SESSION['level']) ? htmlspecialchars($_SESSION['level']) : null;
 $role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : null;
-
+$staff = isset($_SESSION["staff_id"]) ? $_SESSION["staff_id"] : null;
+echo $staff;
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
